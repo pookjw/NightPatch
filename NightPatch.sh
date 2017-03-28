@@ -64,7 +64,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 		exit 1
 	fi
 	if [[ ! -f "patch/patch-$(sw_vers -buildVersion)" ]]; then
-		echo "patch/patch-$(sw_vers -buildVersion) is missing."
+		echo "patch/patch-$(sw_vers -buildVersion) is missing. (seems like not supported macOS)"
 		applyNoColor
 		removeTmp
 		exit 1
@@ -95,14 +95,22 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 		fi
 	fi
 	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
-		echo "You did a patch before. If you patch one more time, macOS won't work properly."
-		applyLightCyan
-		read -s -n 1 -p "Press any key to continue..."
-		applyNoColor
+		echo "You did a patch before. If you patch one more time, macOS won't work properly. Are you sure to continue? (yes/no)"
+		while(true); do
+			applyLightCyan
+			read -p "- " ANSWER
+			applyNoColor
+			if [[ "${ANSWER}" == yes ]]; then
+				break
+			elif [[ "${ANSWER}" == no ]]; then
+				exit 0
+				removeTmp
+			fi
+		done
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 11"
+echo "NightPatch.sh by @pookjw. Version : 12"
 echo "\n**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
