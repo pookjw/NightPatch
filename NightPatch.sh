@@ -1,8 +1,8 @@
 #!/bin/sh
 
 function removeTmp(){
-	if [[ -d /tmp/NightPatch ]]; then
-		rm -rf /tmp/NightPatch
+	if [[ -d /tmp/NightPatch-master ]]; then
+		rm -rf /tmp/NightPatch-master
 	fi
 }
 
@@ -90,7 +90,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 5"
+echo "NightPatch.sh by @pookjw. Version : 6"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
