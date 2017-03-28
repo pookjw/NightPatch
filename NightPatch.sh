@@ -77,9 +77,9 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 3"
+echo "NightPatch.sh by @pookjw. Version : 4"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
-echo "If you got a problem, enter `./CBPatch.sh -revert` command to revert files."
+echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
 applyNoColor
