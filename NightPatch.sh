@@ -103,14 +103,14 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 			if [[ "${ANSWER}" == yes ]]; then
 				break
 			elif [[ "${ANSWER}" == no ]]; then
-				exit 0
 				removeTmp
+				exit 0
 			fi
 		done
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 12"
+echo "NightPatch.sh by @pookjw. Version : 13"
 echo "\n**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
