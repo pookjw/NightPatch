@@ -97,12 +97,12 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 		echo "You did a patch before. If you patch one more time, macOS won't work properly."
 		applyLightCyan
-	read -s -n 1 -p "Press any key to continue..."
-	applyNoColor
+		read -s -n 1 -p "Press any key to continue..."
+		applyNoColor
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 8"
+echo "NightPatch.sh by @pookjw. Version : 9"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
