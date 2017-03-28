@@ -1,3 +1,5 @@
+![Image](https://farm1.staticflickr.com/580/33704162375_e0883536cf_o.png)
+
 # NightPatch
 Enable Night Shift on any old Mac models.
 
