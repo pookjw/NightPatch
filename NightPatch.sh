@@ -7,8 +7,8 @@ function removeTmp(){
 }
 
 function revertAll(){
-	if [[ -f ~/NSPatchBuild ]]; then
-		if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+	if [[ -f ~/NightPatchBuild ]]; then
+		if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
@@ -94,7 +94,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 			exit 1
 		fi
 	fi
-	if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 		echo "You did a patch before. If you patch one more time, macOS won't work properly."
 		applyLightCyan
 		read -s -n 1 -p "Press any key to continue..."
@@ -102,8 +102,8 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 10"
-echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
+echo "NightPatch.sh by @pookjw. Version : 11"
+echo "\n**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -124,8 +124,8 @@ fi
 if [[ -d ~/_CodeSignature.bak ]]; then
 	rm -rf ~/_CodeSignature.bak
 fi
-if [[ -f ~/NSPatchBuild ]]; then
-	rm ~/NSPatchBuild
+if [[ -f ~/NightPatchBuild ]]; then
+	rm ~/NightPatchBuild
 fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
@@ -136,7 +136,7 @@ rm ~/CoreBrightness
 chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
-echo $(sw_vers -buildVersion) >> ~/NSPatchBuild
+echo $(sw_vers -buildVersion) >> ~/NightPatchBuild
 applyNoColor
 if [[ "${1}" == "-test" || "${2}" == "-test" ]]; then
 	echo "Original CoreBrightness : $(shasum ~/CoreBrightness.bak)"
