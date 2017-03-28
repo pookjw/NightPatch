@@ -7,7 +7,7 @@ function removeTmp(){
 }
 
 function revertAll(){
-	if [[ ! -f ~/NSPatchBuild ]]; then
+	if [[ -f ~/NSPatchBuild ]]; then
 		if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
@@ -102,7 +102,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 9"
+echo "NightPatch.sh by @pookjw. Version : 10"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
