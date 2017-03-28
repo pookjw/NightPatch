@@ -77,7 +77,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 1"
+echo "NightPatch.sh by @pookjw. Version : 2"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter `./CBPatch.sh -revert` command to revert files."
 applyLightCyan
@@ -97,6 +97,9 @@ if [[ -f ~/CoreBrightness.bak ]]; then
 fi
 if [[ -d ~/_CodeSignature.bak ]]; then
 	rm -rf ~/_CodeSignature.bak
+fi
+if [[ -f ~/NSPatchBuild ]]; then
+	rm ~/NSPatchBuild
 fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
