@@ -114,8 +114,8 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 15"
-echo "\n**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
+echo "NightPatch.sh by @pookjw. Version : 16"
+echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
 applyNoColor
