@@ -15,6 +15,7 @@ function revertAll(){
 			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
+			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			quitTool0
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
@@ -114,7 +115,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 18"
+echo "NightPatch.sh by @pookjw. Version : 19"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
