@@ -25,7 +25,7 @@ Enable Night Shift on any old Mac models.
 
 ## Trobleshooting
 
-- patch-BUILD is missing.
+- patch/patch-BUILD is missing.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
 
