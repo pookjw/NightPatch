@@ -1,6 +1,9 @@
 #!/bin/sh
 
 function removeTmp(){
+	if [[ -f /tmp/NightPatch.zip ]]; then
+		rm /tmp/NightPatch.zip
+	fi
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
 	fi
@@ -12,17 +15,14 @@ function revertAll(){
 			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
-			removeTmp
-			exit 0
+			quitTool0
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
-			removeTmp
-			exit 1
+			quitTool1
 		fi
 	else
 		echo "No backup."
-		removeTmp
-		exit 1
+		quitTool1
 	fi
 }
 
@@ -40,6 +40,16 @@ function applyPurple(){
 
 function applyNoColor(){
 	echo "\033[0m"
+}
+
+function quitTool0(){
+	removeTmp
+	exit 0
+}
+
+function quitTool1(){
+	removeTmp
+	exit 1
 }
 
 if [[ "${1}" == "-revert" ]]; then
@@ -60,27 +70,23 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	if [[ "${MACOS_ERROR}" == YES ]]; then
 		echo "Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
 		applyNoColor
-		removeTmp
-		exit 1
+		quitTool1
 	fi
 	if [[ ! -f "patch/patch-$(sw_vers -buildVersion)" ]]; then
 		echo "patch/patch-$(sw_vers -buildVersion) is missing. (seems like not supported macOS)"
 		applyNoColor
-		removeTmp
-		exit 1
+		quitTool1
 	fi
 	if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
 		applyRed
 		echo "ERROR : Turn off System Integrity Protection before doing this."
 		applyNoColor
-		removeTmp
-		exit 1
+		quitTool1
 	fi
 	if [[ ! -f "/Applications/Xcode.app/Contents/version.plist" ]]; then
 		echo "ERROR : Please install Xcode from App Store."
 		applyNoColor
-		removeTmp
-		exit 1 
+		quitTool1
 	else
 		if [[ "$(defaults read /Applications/Xcode.app/Contents/version.plist CFBundleShortVersionString | cut -d"." -f1)" -lt 8 ]]; then
 			XCODE_ERROR=YES
@@ -90,8 +96,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 		if [[ "${XCODE_ERROR}" == YES ]]; then
 			echo "ERROR : Requires Xcode 8.3 or higher. Please Update from App Store."
 			applyNoColor
-			removeTmp
-			exit 1
+			quitTool1
 		fi
 	fi
 	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
@@ -103,14 +108,13 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 			if [[ "${ANSWER}" == yes ]]; then
 				break
 			elif [[ "${ANSWER}" == no ]]; then
-				removeTmp
-				exit 0
+				quitTool0
 			fi
 		done
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 13"
+echo "NightPatch.sh by @pookjw. Version : 14"
 echo "\n**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
@@ -119,8 +123,7 @@ applyNoColor
 sudo touch /System/test
 if [[ ! -f /System/test ]]; then
 	echo "ERROR : Can't write a file to root."
-	removeTmp
-	exit 1
+	quitTool1
 fi
 sudo rm -rf /System/test
 if [[ -f ~/CoreBrightness ]]; then
@@ -150,9 +153,7 @@ if [[ "${1}" == "-test" || "${2}" == "-test" ]]; then
 	echo "Original CoreBrightness : $(shasum ~/CoreBrightness.bak)"
 	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
 	revertAll
-	removeTmp
-	exit 0
+	quitTool0
 fi
 echo "Patch was done. Please reboot your Mac to complete."
-removeTmp
-exit 0
+quitTool0
