@@ -48,8 +48,8 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 		applyNoColor
 		exit 1
 	fi
-	if [[ ! -f "patch-$(sw_vers -buildVersion)" ]]; then
-		echo "patch-$(sw_vers -buildVersion) is missing."
+	if [[ ! -f "patch/patch-$(sw_vers -buildVersion)" ]]; then
+		echo "patch/patch-$(sw_vers -buildVersion) is missing."
 		applyNoColor
 		exit 1
 	fi
@@ -77,7 +77,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 2"
+echo "NightPatch.sh by @pookjw. Version : 3"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter `./CBPatch.sh -revert` command to revert files."
 applyLightCyan
@@ -104,8 +104,8 @@ fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
 cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature ~/_CodeSignature.bak
-bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness patch-$(sw_vers -buildVersion)
-cp ~/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness patch/patch-$(sw_vers -buildVersion)
+sudo cp ~/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 rm ~/CoreBrightness
 chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyPurple
