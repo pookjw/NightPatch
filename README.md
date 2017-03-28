@@ -15,7 +15,7 @@ Enable Night Shift on any old Mac models.
 
 - Unsupported old Mac
 
-## Usage
+## How to patch
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh`
 
