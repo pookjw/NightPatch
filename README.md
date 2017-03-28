@@ -3,7 +3,7 @@
 # NightPatch
 Enable Night Shift on any old Mac models.
 
-## Supported macOS version
+## Supported macOS build
 
 - macOS 10.12.4 (16E195)
 
