@@ -7,14 +7,20 @@ function removeTmp(){
 }
 
 function revertAll(){
-	if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
-		sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
-		sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
-		sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
-		removeTmp
-		exit 0
+	if [[ ! -f ~/NSPatchBuild ]]; then
+		if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
+			sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
+			removeTmp
+			exit 0
+		else
+			echo "This backup is not for this macOS. Seems like you've updated your macOS."
+			removeTmp
+			exit 1
+		fi
 	else
-		echo "This backup is not for this macOS. Seems like you've updated your macOS."
+		echo "No backup."
 		removeTmp
 		exit 1
 	fi
@@ -88,9 +94,15 @@ if [[ ! "${1}" == "-skipAllWarnings" || "${2}" == "-skipAllWarnings" ]]; then
 			exit 1
 		fi
 	fi
+	if [[ "$(cat ~/NSPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+		echo "You did patch before. If you patch one more time, macOS won't work properly."
+		applyLightCyan
+	read -s -n 1 -p "Press any key to continue..."
+	applyNoColor
+	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 6"
+echo "NightPatch.sh by @pookjw. Version : 7"
 echo "\n**WARNING : NSPatch is currently in BETA. I don't guarantee of any problems."
 echo "If you got a problem, enter './CBPatch.sh -revert' command to revert files."
 applyLightCyan
