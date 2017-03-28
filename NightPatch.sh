@@ -58,7 +58,7 @@ fi
 
 MACOS_BUILD="$(sw_vers -buildVersion)"
 
-if [[ ! "${1}" == "-skipAllWarnings" || ! "${2}" == "-skipAllWarnings" ]]; then
+if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	applyRed
 	if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
 		MACOS_ERROR=YES
@@ -114,7 +114,7 @@ if [[ ! "${1}" == "-skipAllWarnings" || ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 17"
+echo "NightPatch.sh by @pookjw. Version : 18"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
