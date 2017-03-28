@@ -29,7 +29,7 @@ Enable Night Shift on any old Mac models.
 
 - patch-BUILD is missing.
 
-: That’s because I didn’t make the patch file YET. I’ll make for you. :)
+: That’s because I didn’t make the patch file for your macOS. I’ll make for you when it possible.
 
 - ERROR : Turn off System Integrity Protection before doing this.
 
