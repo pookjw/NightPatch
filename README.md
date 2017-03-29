@@ -7,7 +7,7 @@ Enable Night Shift on any old Mac models.
 
 - macOS 10.12.4 (16E195)
 
-- macOS 10.12.5 Developer Preview 1 (16F43c) - **Broken**
+- macOS 10.12.5 Developer Preview 1 (16F43c)
 
 ## How to patch
 
