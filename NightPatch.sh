@@ -84,22 +84,6 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 		applyNoColor
 		quitTool1
 	fi
-	if [[ ! -f "/Applications/Xcode.app/Contents/version.plist" ]]; then
-		echo "ERROR : Please install Xcode from App Store."
-		applyNoColor
-		quitTool1
-	else
-		if [[ "$(defaults read /Applications/Xcode.app/Contents/version.plist CFBundleShortVersionString | cut -d"." -f1)" -lt 8 ]]; then
-			XCODE_ERROR=YES
-		elif [[ "$(defaults read /Applications/Xcode.app/Contents/version.plist CFBundleShortVersionString | cut -d"." -f1)" == 8 && "$(defaults read /Applications/Xcode.app/Contents/version.plist CFBundleShortVersionString | cut -d"." -f2)" -lt 3 ]]; then
-			XCODE_ERROR=YES
-		fi
-		if [[ "${XCODE_ERROR}" == YES ]]; then
-			echo "ERROR : Requires Xcode 8.3 or higher. Please Update from App Store."
-			applyNoColor
-			quitTool1
-		fi
-	fi
 	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 		echo "You did a patch before. If you patch one more time, macOS won't work properly. Are you sure to continue? (yes/no)"
 		while(true); do
@@ -115,7 +99,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 19"
+echo "NightPatch.sh by @pookjw. Version : 20"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -125,10 +109,7 @@ if [[ ! -f /System/test ]]; then
 	echo "ERROR : Can't write a file to root."
 	quitTool1
 fi
-sudo rm -rf /System/test
-if [[ -f ~/CoreBrightness ]]; then
-	rm ~/CoreBrightness
-fi
+sudo rm /System/test
 if [[ -f ~/CoreBrightness.bak ]]; then
 	rm ~/CoreBrightness.bak
 fi
@@ -141,10 +122,10 @@ fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
 cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature ~/_CodeSignature.bak
-bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness patch/patch-$(sw_vers -buildVersion)
-sudo cp ~/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
-rm ~/CoreBrightness
-chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/patch-$(sw_vers -buildVersion)
+sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+sudo mv /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 echo $(sw_vers -buildVersion) >> ~/NightPatchBuild

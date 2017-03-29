@@ -9,12 +9,6 @@ Enable Night Shift on any old Mac models.
 
 - macOS 10.12.5 Developer Preview 1 (16F43c) - **Broken**
 
-## Requirements
-
-- Xcode 8.3 or higher with Command Line Tools.
-
-- Unsupported old Mac
-
 ## How to patch
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh`
