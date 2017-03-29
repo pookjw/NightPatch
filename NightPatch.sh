@@ -84,22 +84,9 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 		applyNoColor
 		quitTool1
 	fi
-	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
-		echo "You did a patch before. If you patch one more time, macOS won't work properly. Are you sure to continue? (yes/no)"
-		while(true); do
-			applyLightCyan
-			read -p "- " ANSWER
-			applyNoColor
-			if [[ "${ANSWER}" == yes ]]; then
-				break
-			elif [[ "${ANSWER}" == no ]]; then
-				quitTool0
-			fi
-		done
-	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 21"
+echo "NightPatch.sh by @pookjw. Version : 22"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -119,10 +106,16 @@ fi
 if [[ -f ~/NightPatchBuild ]]; then
 	rm ~/NightPatchBuild
 fi
+if [[ -f ~/NightPatchBuild ]]; then
+	revertAll
+fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
 cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature ~/_CodeSignature.bak
 echo $(sw_vers -buildVersion) >> ~/NightPatchBuild
+applyPurple
+sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+applyRed
 sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/patch-$(sw_vers -buildVersion)
 sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 sudo mv /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
