@@ -22,7 +22,7 @@ Not compatible with some third-party monitors.
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert`
 
-## Trobleshooting
+## Troubleshooting
 
 - patch/patch-BUILD is missing.
 
