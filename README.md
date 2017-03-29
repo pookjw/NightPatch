@@ -28,6 +28,6 @@ Not compatible with some third-party monitors.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
 
-- ERROR : Turn off System Integrity Protection before doing this.
+- ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
 
 : [Solution](http://apple.stackexchange.com/questions/208478/how-do-i-disable-system-integrity-protection-sip-aka-rootless-on-os-x-10-11)
