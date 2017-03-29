@@ -18,7 +18,7 @@ function revertAll(){
 			applyPurple
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			applyNoColor
-			if [[ ! "${1}" == "--doNotQuit" ]]; then
+			if [[ ! "${1}" == "-doNotQuit" ]]; then
 				quitTool0
 			fi
 		else
@@ -90,7 +90,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 24"
+echo "NightPatch.sh by @pookjw. Version : 25"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
