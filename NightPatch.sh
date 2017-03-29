@@ -86,7 +86,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 22"
+echo "NightPatch.sh by @pookjw. Version : 23"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -97,6 +97,11 @@ if [[ ! -f /System/test ]]; then
 	quitTool1
 fi
 sudo rm /System/test
+if [[ -f ~/NightPatchBuild ]]; then
+	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+		revertAll
+	fi
+fi
 if [[ -f ~/CoreBrightness.bak ]]; then
 	rm ~/CoreBrightness.bak
 fi
@@ -105,9 +110,6 @@ if [[ -d ~/_CodeSignature.bak ]]; then
 fi
 if [[ -f ~/NightPatchBuild ]]; then
 	rm ~/NightPatchBuild
-fi
-if [[ -f ~/NightPatchBuild ]]; then
-	revertAll
 fi
 applyRed
 cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/CoreBrightness.bak
