@@ -4,6 +4,8 @@
 
 Enable Night Shift on any old Mac models.
 
+You have to disable SIP (System Integrity Protection) before applying. [How to disable SIP](http://apple.stackexchange.com/questions/208478/how-do-i-disable-system-integrity-protection-sip-aka-rootless-on-os-x-10-11)
+
 Not compatible with some third-party monitors.
 
 ## Supported macOS build
