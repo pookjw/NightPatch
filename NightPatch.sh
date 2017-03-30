@@ -61,8 +61,6 @@ if [[ "${1}" == "-revert" ]]; then
 	revertAll
 fi
 
-MACOS_BUILD="$(sw_vers -buildVersion)"
-
 if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	applyRed
 	if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
@@ -90,7 +88,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 27"
+echo "NightPatch.sh by @pookjw. Version : 28"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -135,7 +133,6 @@ if [[ "${1}" == "-test" || "${2}" == "-test" ]]; then
 	echo "Original CoreBrightness : $(shasum ~/CoreBrightness.bak)"
 	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
 	revertAll
-	quitTool0
 fi
 echo "Patch was done. Please reboot your Mac to complete."
 quitTool0
