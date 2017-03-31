@@ -46,7 +46,7 @@ function checkSHA(){
 			quitTool1
 		fi
 	else
-		echo "sha file not found."
+		echo "SHA file not found."
 	fi
 }
 
@@ -107,7 +107,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 34"
+echo "NightPatch.sh by @pookjw. Version : 35"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
