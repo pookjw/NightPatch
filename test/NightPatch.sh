@@ -12,13 +12,16 @@ function removeTmp(){
 function revertAll(){
 	if [[ -f ~/NightPatchBuild ]]; then
 		if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+			if [[ ! "${1}" == "-doNotPrint" && ! "${2}" == "-doNotPrint" ]]; then
+				echo "Reverting..."
+			fi
 			sudo cp ~/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			sudo cp -r ~/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			applyPurple
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			applyNoColor
-			if [[ ! "${1}" == "-doNotQuit" ]]; then
+			if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
 				quitTool0
 			fi
 		else
@@ -100,7 +103,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 30"
+echo "NightPatch.sh by @pookjw. Version : 31"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -114,7 +117,7 @@ sudo rm /System/test
 if [[ -f ~/NightPatchBuild ]]; then
 	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 		echo "Detected backup. Restoring..."
-		revertAll -doNotQuit
+		revertAll -doNotQuit -doNotPrint
 		echo "Patching again..."
 	fi
 fi
