@@ -103,7 +103,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 31"
+echo "NightPatch.sh by @pookjw. Version : 32"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -116,7 +116,7 @@ fi
 sudo rm /System/test
 if [[ -f ~/NightPatchBuild ]]; then
 	if [[ "$(cat ~/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
-		echo "Detected backup. Restoring..."
+		echo "Detected backup. Reverting..."
 		revertAll -doNotQuit -doNotPrint
 		echo "Patching again..."
 	fi
