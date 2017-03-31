@@ -10,6 +10,8 @@ Backup your Mac before applying.
 
 Not compatible with some third-party monitors.
 
+Thanks to [Pike](https://pikeralpha.wordpress.com/2017/01/30/4398/).
+
 ## Supported macOS build
 
 - macOS 10.12.4 (16E195)
