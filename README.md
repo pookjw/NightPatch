@@ -10,7 +10,7 @@ Backup your Mac before applying.
 
 Not compatible with some third-party monitors.
 
-Thanks to [Pike](https://pikeralpha.wordpress.com/2017/01/30/4398/).
+Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Supported macOS build
 
