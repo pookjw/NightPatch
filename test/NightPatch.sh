@@ -35,8 +35,8 @@ function revertAll(){
 }
 
 function checkSHA(){
-	if [[ -d sha ]]; then
-		if [[ ! -f "sha/sha-$(sw_vers -buildVersion)_${1}.txt" || -z "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" || ! "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" == "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" ]]; then
+	if [[ -f "sha/sha-$(sw_vers -buildVersion)_${1}.txt" ]]; then
+		if [[ -z "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" || ! "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" == "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" ]]; then
 			echo "SHA not matching. Patch was failed. (${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
 			revertAll
 			quitTool1
@@ -103,7 +103,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 32"
+echo "NightPatch.sh by @pookjw. Version : 33"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
