@@ -16,6 +16,8 @@ Not compatible with some third-party monitors.
 
 - macOS 10.12.5 Developer Preview 1 (16F43c)
 
+- macOS 10.12.5 Public Beta 1 (**Coming Soon**)
+
 ## How to patch
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh`
