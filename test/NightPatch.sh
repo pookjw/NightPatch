@@ -26,23 +26,27 @@ function revertAll(){
 			fi
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
-			quitTool1
+			if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
+				quitTool1
+			fi
 		fi
 	else
 		echo "No backup."
-		quitTool1
+		if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
+			quitTool1
+		fi
 	fi
 }
 
 function checkSHA(){
 	if [[ -f "sha/sha-$(sw_vers -buildVersion)_${1}.txt" ]]; then
-		if [[ -z "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" || ! "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" == "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" ]]; then
+		if [[ ! "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" == "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" ]]; then
 			echo "SHA not matching. Patch was failed. (${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
-			revertAll
+			revertAll -doNotQuit
 			quitTool1
 		fi
 	else
-		echo "sha not found."
+		echo "sha file not found."
 	fi
 }
 
@@ -103,7 +107,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 33"
+echo "NightPatch.sh by @pookjw. Version : 34"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
