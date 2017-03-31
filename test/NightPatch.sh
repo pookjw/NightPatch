@@ -80,7 +80,7 @@ if [[ "${1}" == "-revert" ]]; then
 	revertAll
 fi
 
-if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
+if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3}" == "-skipAllWarnings" ]]; then
 	applyRed
 	if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
 		MACOS_ERROR=YES
@@ -107,7 +107,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" ]]; then
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 35"
+echo "NightPatch.sh by @pookjw. Version : 36"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -144,7 +144,9 @@ echo $(sw_vers -buildVersion) >> ~/NightPatchBuild
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyRed
-checkSHA original
+if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == "-skipCheckSHA" ]]; then
+	checkSHA original
+fi
 sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/patch-$(sw_vers -buildVersion)
 sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 sudo mv /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
@@ -152,9 +154,11 @@ sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Version
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyRed
-checkSHA patched
+if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == "-skipCheckSHA" ]]; then
+	checkSHA patched
+fi
 applyNoColor
-if [[ "${1}" == "-test" || "${2}" == "-test" ]]; then
+if [[ "${1}" == "-test" || "${2}" == "-test" || "${3}" == "-test" ]]; then
 	echo "Original CoreBrightness : $(shasum ~/CoreBrightness.bak)"
 	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
 	revertAll
