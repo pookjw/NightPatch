@@ -16,7 +16,7 @@ Not compatible with some third-party monitors.
 
 - macOS 10.12.5 Developer Preview 1 (16F43c)
 
-- macOS 10.12.5 Public Beta 1 (16F43c) **Testing**
+- macOS 10.12.5 Public Beta 1 (16F43c)
 
 ## How to patch
 
