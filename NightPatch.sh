@@ -107,14 +107,16 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 37"
+echo "NightPatch.sh by @pookjw. Version : 38"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
 applyNoColor
 sudo touch /System/test
 if [[ ! -f /System/test ]]; then
+	applyRed
 	echo "ERROR : Can't write a file to root."
+	applyNoColor
 	quitTool1
 fi
 sudo rm /System/test
