@@ -7,17 +7,29 @@ function removeTmp(){
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
 	fi
+	if [[ -f NightPatch.zip ]]; then
+		rm NightPatch.zip
+	fi
+	if [[ -d NightPatch-master ]]; then
+		rm -rf NightPatch-master
+	fi
+	if [[ -f ~/NightPatch.zip ]]; then
+		rm ~/NightPatch.zip
+	fi
+	if [[ -d ~/NightPatch-master ]]; then
+		rm -rf ~/NightPatch-master
+	fi
 }
 
 function revertAll(){
-	if [[ -f ~/Library/NightPatch/NightPatchBuild ]]; then
-		if [[ "$(cat ~/Library/NightPatch/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
+		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 			if [[ ! "${1}" == "-doNotPrint" && ! "${2}" == "-doNotPrint" ]]; then
 				echo "Reverting..."
 			fi
-			sudo cp ~/Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
+			sudo cp /Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
-			sudo cp -r ~/Library/NightPatch/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
+			sudo cp -r /Library/NightPatch/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			applyPurple
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			applyNoColor
@@ -39,6 +51,7 @@ function revertAll(){
 }
 
 function moveOldBackup(){
+	# Version 1~38
 	if [[ -d ~/_CodeSignature.bak ]]; then
 		if [[ ! -d ~/Library/NightPatch ]]; then
 			mkdir ~/Library/NightPatch
@@ -68,6 +81,41 @@ function moveOldBackup(){
 		fi
 		echo "Move : ~/NightPatchBuild >> ~/Library/NightPatch"
 		mv ~/NightPatchBuild ~/Library/NightPatch
+	fi
+
+	# Version 39~40
+	if [[ -d ~/Library/NightPatch/_CodeSignature.bak ]]; then
+		if [[ ! -d /Library/NightPatch ]]; then
+			sudo mkdir /Library/NightPatch
+		fi
+		if [[ -d /Library/NightPatch/_CodeSignature.bak ]]; then
+			sudo rm -rf /Library/NightPatch/_CodeSignature.bak
+		fi
+		echo "Move : ~/Library/NightPatch/_CodeSignature.bak >> /Library/NightPatch"
+		sudo mv ~/Library/NightPatch/_CodeSignature.bak /Library/NightPatch
+	fi
+	if [[ -f ~/Library/NightPatch/CoreBrightness.bak ]]; then
+		if [[ ! -d /Library/NightPatch ]]; then
+			sudo mkdir /Library/NightPatch
+		fi
+		if [[ -f /Library/NightPatch/CoreBrightness.bak ]]; then
+			sudo rm /Library/NightPatch/CoreBrightness.bak
+		fi
+		echo "Move : ~/Library/NightPatch/CoreBrightness.bak >> /Library/NightPatch"
+		sudo mv ~/Library/NightPatch/CoreBrightness.bak /Library/NightPatch/CoreBrightness.bak
+	fi
+	if [[ -f ~/Library/NightPatch/NightPatchBuild ]]; then
+		if [[ ! -d /Library/NightPatch ]]; then
+			sudo mkdir /Library/NightPatch
+		fi
+		if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
+			sudo rm /Library/NightPatch/NightPatchBuild
+		fi
+		echo "Move : ~/Library/NightPatch/NightPatchBuild >> /Library/NightPatch"
+		sudo mv ~/Library/NightPatch/NightPatchBuild /Library/NightPatch/NightPatchBuild
+	fi
+	if [[ -d ~/Library/NightPatch ]]; then
+		sudo rm -rf ~/Library/NightPatch
 	fi
 }
 
@@ -144,7 +192,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 40"
+echo "NightPatch.sh by @pookjw. Version : 41"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -157,32 +205,33 @@ if [[ ! -f /System/test ]]; then
 	quitTool1
 fi
 sudo rm /System/test
-if [[ -f ~/Library/NightPatch/NightPatchBuild ]]; then
-	if [[ "$(cat ~/Library/NightPatch/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
+if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
+	if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 		echo "Detected backup. Reverting..."
 		revertAll -doNotQuit -doNotPrint
 		echo "Patching again..."
 	fi
 fi
-if [[ ! -d ~/Library/NightPatch ]]; then
-	mkdir ~/Library/NightPatch/
+if [[ ! -d /Library/NightPatch ]]; then
+	sudo mkdir /Library/NightPatch/
 fi
-if [[ -f ~/Library/NightPatch/CoreBrightness.bak ]]; then
-	rm ~/Library/NightPatch/CoreBrightness.bak
+if [[ -f /Library/NightPatch/CoreBrightness.bak ]]; then
+	sudo rm /Library/NightPatch/CoreBrightness.bak
 fi
-if [[ -d ~/Library/NightPatch/_CodeSignature.bak ]]; then
-	rm -rf ~/Library/NightPatch/_CodeSignature.bak
+if [[ -d /Library/NightPatch/_CodeSignature.bak ]]; then
+	sudo rm -rf /Library/NightPatch/_CodeSignature.bak
 fi
-if [[ -f ~/Library/NightPatch/NightPatchBuild ]]; then
-	rm ~/Library/NightPatch/NightPatchBuild
+if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
+	sudo rm /Library/NightPatch/NightPatchBuild
 fi
 if [[ -f /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch ]]; then
 	sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
 fi
 applyRed
-cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/Library/NightPatch/CoreBrightness.bak
-cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature ~/Library/NightPatch/_CodeSignature.bak
-echo $(sw_vers -buildVersion) >> ~/Library/NightPatch/NightPatchBuild
+sudo cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
+sudo cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+echo $(sw_vers -buildVersion) >> /tmp/NightPatchBuild
+sudo mv /tmp/NightPatchBuild /Library/NightPatch
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyRed
@@ -201,7 +250,7 @@ if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == 
 fi
 applyNoColor
 if [[ "${1}" == "-test" || "${2}" == "-test" || "${3}" == "-test" ]]; then
-	echo "Original CoreBrightness : $(shasum ~/Library/NightPatch/CoreBrightness.bak)"
+	echo "Original CoreBrightness : $(shasum /Library/NightPatch/CoreBrightness.bak)"
 	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
 	revertAll
 fi
