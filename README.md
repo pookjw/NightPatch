@@ -20,6 +20,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.5 Public Beta 1 (16F43c)
 
+- **macOS 10.12.5 Developer Preview 2 (Coming Soon)**
+
 ## How to patch
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh`
