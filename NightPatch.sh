@@ -51,6 +51,7 @@ function revertAll(){
 }
 
 function moveOldBackup(){
+	applyPurple
 	# Version 1~38
 	if [[ -d ~/_CodeSignature.bak ]]; then
 		if [[ ! -d ~/Library/NightPatch ]]; then
@@ -117,6 +118,7 @@ function moveOldBackup(){
 	if [[ -d ~/Library/NightPatch ]]; then
 		sudo rm -rf ~/Library/NightPatch
 	fi
+	applyNoColor
 }
 
 function checkSHA(){
@@ -192,7 +194,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 41"
+echo "NightPatch.sh by @pookjw. Version : 42"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
