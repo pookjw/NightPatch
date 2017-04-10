@@ -46,6 +46,7 @@ function moveOldBackup(){
 		if [[ -d ~/Library/NightPatch/_CodeSignature.bak ]]; then
 			rm -rf ~/Library/NightPatch/_CodeSignature.bak
 		fi
+		echo "Move : ~/_CodeSignature.bak >> ~/Library/NightPatch"
 		mv ~/_CodeSignature.bak ~/Library/NightPatch
 	fi
 	if [[ -f ~/CoreBrightness.bak ]]; then
@@ -55,6 +56,7 @@ function moveOldBackup(){
 		if [[ -f ~/Library/NightPatch/CoreBrightness.bak ]]; then
 			rm ~/Library/NightPatch/CoreBrightness.bak
 		fi
+		echo "Move : ~/CoreBrightness.bak >> ~/Library/NightPatch"
 		mv ~/CoreBrightness.bak ~/Library/NightPatch
 	fi
 	if [[ -f ~/NightPatchBuild ]]; then
@@ -64,6 +66,7 @@ function moveOldBackup(){
 		if [[ -f ~/Library/NightPatch/NightPatchBuild ]]; then
 			rm ~/Library/NightPatch/NightPatchBuild
 		fi
+		echo "Move : ~/NightPatchBuild >> ~/Library/NightPatch"
 		mv ~/NightPatchBuild ~/Library/NightPatch
 	fi
 }
@@ -141,7 +144,7 @@ if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3
 	fi
 	applyNoColor
 fi
-echo "NightPatch.sh by @pookjw. Version : 39"
+echo "NightPatch.sh by @pookjw. Version : 40"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
