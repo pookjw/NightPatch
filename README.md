@@ -24,6 +24,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## How to patch
 
+Enter this command on Terminal **without $**.
+
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master; ./NightPatch.sh`
 
 ## How to revert
