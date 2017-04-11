@@ -4,7 +4,7 @@
 
 Enable Night Shift on any old Mac models.
 
-You have to disable SIP (System Integrity Protection) before applying. [How to disable SIP](http://apple.stackexchange.com/questions/208478/how-do-i-disable-system-integrity-protection-sip-aka-rootless-on-os-x-10-11)
+You have to disable SIP (System Integrity Protection) before applying. [How to disable SIP](http://apple.stackexchange.com/a/209530)
 
 Backup your Mac before applying.
 
@@ -40,4 +40,4 @@ Enter this command on Terminal **without $**.
 
 - ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
 
-: [Solution](http://apple.stackexchange.com/questions/208478/how-do-i-disable-system-integrity-protection-sip-aka-rootless-on-os-x-10-11)
+: [Solution](http://apple.stackexchange.com/a/209530)
