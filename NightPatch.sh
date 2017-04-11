@@ -1,4 +1,5 @@
 #!/bin/sh
+VERSION=44
 
 function removeTmp(){
 	if [[ -f /tmp/NightPatch.zip ]]; then
@@ -150,15 +151,18 @@ function applyNoColor(){
 }
 
 function quitTool0(){
+	applyNoColor
 	removeTmp
 	exit 0
 }
 
 function quitTool1(){
+	applyNoColor
 	removeTmp
 	exit 1
 }
 
+applyRed
 if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
 	MACOS_ERROR=YES
 elif [[ "$(sw_vers -productVersion | cut -d"." -f2)" == 12 ]]; then
@@ -168,13 +172,10 @@ elif [[ "$(sw_vers -productVersion | cut -d"." -f2)" == 12 ]]; then
 fi
 if [[ "${MACOS_ERROR}" == YES ]]; then
 	echo "Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
-	applyNoColor
 	quitTool1
 fi
 if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
-	applyRed
 	echo "ERROR : Turn off System Integrity Protection before doing this."
-	applyNoColor
 	quitTool1
 fi
 moveOldBackup
@@ -184,13 +185,17 @@ fi
 if [[ "${1}" == "-revert" ]]; then
 	revertAll
 fi
+applyRed
+if [[ ! -d patch ]]; then
+	echo "patch folder is missing. Try again."
+	quitTool1
+fi
 if [[ ! -f "patch/$(sw_vers -buildVersion).patch" ]]; then
 	echo "patch/$(sw_vers -buildVersion).patch is missing. (seems like not supported macOS)"
-	applyNoColor
 	quitTool1
 fi
 applyNoColor
-echo "NightPatch.sh by @pookjw. Version : 43"
+echo "NightPatch.sh by @pookjw. Version : ${VERSION}"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -199,7 +204,6 @@ sudo touch /System/test
 if [[ ! -f /System/test ]]; then
 	applyRed
 	echo "ERROR : Can't write a file to root."
-	applyNoColor
 	quitTool1
 fi
 sudo rm /System/test
