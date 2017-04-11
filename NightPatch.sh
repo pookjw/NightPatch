@@ -159,6 +159,24 @@ function quitTool1(){
 	exit 1
 }
 
+if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
+	MACOS_ERROR=YES
+elif [[ "$(sw_vers -productVersion | cut -d"." -f2)" == 12 ]]; then
+	if [[ "$(sw_vers -productVersion | cut -d"." -f3)" -lt 4 ]]; then
+		MACOS_ERROR=YES
+	fi
+fi
+if [[ "${MACOS_ERROR}" == YES ]]; then
+	echo "Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
+	applyNoColor
+	quitTool1
+fi
+if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
+	applyRed
+	echo "ERROR : Turn off System Integrity Protection before doing this."
+	applyNoColor
+	quitTool1
+fi
 moveOldBackup
 if [[ "${1}" == "-moveOldBackup" ]]; then
 	quitTool0
@@ -166,35 +184,13 @@ fi
 if [[ "${1}" == "-revert" ]]; then
 	revertAll
 fi
-
-if [[ ! "${1}" == "-skipAllWarnings" && ! "${2}" == "-skipAllWarnings" && ! "${3}" == "-skipAllWarnings" ]]; then
-	applyRed
-	if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
-		MACOS_ERROR=YES
-	elif [[ "$(sw_vers -productVersion | cut -d"." -f2)" == 12 ]]; then
-		if [[ "$(sw_vers -productVersion | cut -d"." -f3)" -lt 4 ]]; then
-			MACOS_ERROR=YES
-		fi
-	fi
-	if [[ "${MACOS_ERROR}" == YES ]]; then
-		echo "Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
-		applyNoColor
-		quitTool1
-	fi
-	if [[ ! -f "patch/patch-$(sw_vers -buildVersion)" ]]; then
-		echo "patch/patch-$(sw_vers -buildVersion) is missing. (seems like not supported macOS)"
-		applyNoColor
-		quitTool1
-	fi
-	if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
-		applyRed
-		echo "ERROR : Turn off System Integrity Protection before doing this."
-		applyNoColor
-		quitTool1
-	fi
+if [[ ! -f "patch/$(sw_vers -buildVersion).patch" ]]; then
+	echo "patch/$(sw_vers -buildVersion).patch is missing. (seems like not supported macOS)"
 	applyNoColor
+	quitTool1
 fi
-echo "NightPatch.sh by @pookjw. Version : 42"
+applyNoColor
+echo "NightPatch.sh by @pookjw. Version : 43"
 echo "**WARNING : NightPatch is currently in BETA. I don't guarantee of any problems."
 applyLightCyan
 read -s -n 1 -p "Press any key to continue..."
@@ -240,7 +236,7 @@ applyRed
 if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == "-skipCheckSHA" ]]; then
 	checkSHA original
 fi
-sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/patch-$(sw_vers -buildVersion)
+sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/$(sw_vers -buildVersion).patch
 sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 sudo mv /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness

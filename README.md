@@ -32,7 +32,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Troubleshooting
 
-- patch/patch-BUILD is missing.
+- patch/BUILD.patch is missing.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
 
