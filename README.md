@@ -18,9 +18,9 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.5 Developer Preview 1 (16F43c)
 
-- macOS 10.12.5 Public Beta 1 (16F43c)
-
 - macOS 10.12.5 Developer Preview 2 (16F54b)
+
+- macOS 10.12.5 Public Beta 1 (16F43c)
 
 - macOS 10.12.5 Public Beta 2 (16F54b)
 
