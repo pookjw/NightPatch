@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=47
+VERSION=48
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -147,7 +147,6 @@ function revertUsingCombo(){
 		sudo cp -r /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
 		echo $(sw_vers -buildVersion) >> /tmp/NightPatchBuild
 		sudo mv /tmp/NightPatchBuild /Library/NightPatch
-		hdiutil eject /tmp/NightPatch-tmp/macOSUpdate
 		echo "Done. Reverting from backup..."
 	else
 		applyRed
