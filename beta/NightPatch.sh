@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=57
+VERSION=58
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -70,7 +70,7 @@ function revertUsingCombo(){
 			echo "ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this."
 			quitTool1
 		fi
-		if [[ ! -f "combo/$(sw_vers -buildVersion)/update.dmg" ]]; then
+		if [[ ! -f /tmp/update.dmg ]]; then
 			if [[ ! -f "combo/$(sw_vers -buildVersion)/url.txt" ]]; then
 				applyRed
 				echo "ERROR : combo/$(sw_vers -buildVersion)/url.txt not found."
@@ -82,8 +82,8 @@ function revertUsingCombo(){
 				quitTool1
 			fi
 			echo "Downloading update..."
-			curl -o "combo/$(sw_vers -buildVersion)/update.dmg" "$(cat "combo/$(sw_vers -buildVersion)/url.txt")"
-			if [[ ! -f "combo/$(sw_vers -buildVersion)/update.dmg" ]]; then
+			curl -o /tmp/update.dmg "$(cat "combo/$(sw_vers -buildVersion)/url.txt")"
+			if [[ ! -f /tmp/update.dmg ]]; then
 				applyRed
 				echo "ERROR : Failed to download file."
 				quitTool1
@@ -112,7 +112,7 @@ function revertUsingCombo(){
 				rm -rf /tmp/NightPatch-tmp/macOSUpdate
 			fi
 		fi
-		hdiutil attach "combo/$(sw_vers -buildVersion)/update.dmg" -mountpoint /tmp/NightPatch-tmp/macOSUpdate
+		hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
 		echo "Extracting... (1)"
 		pkgutil --expand /tmp/NightPatch-tmp/macOSUpdate/* /tmp/NightPatch-tmp/1
 		cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
