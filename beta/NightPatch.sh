@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=59
+VERSION=60
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -75,7 +75,7 @@ function revertUsingCombo(){
 			echo "ERROR : Requires lzma.
 			applyNocolor
 			echo "1. Install Homebrew. https://brew.sh"
-			echo "2. Enter 'brew install xz' command to install'
+			echo "2. Enter 'brew install xz' command to install."
 			quitTool1
 		fi
 		if [[ ! -f /tmp/update.dmg ]]; then
