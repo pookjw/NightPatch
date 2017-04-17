@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=48
+VERSION=49
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -150,7 +150,7 @@ function revertUsingCombo(){
 		echo "Done. Reverting from backup..."
 	else
 		applyRed
-		echo "ERROR : $(sw_vers -buildVersion) is not supported."
+		echo "ERROR : Your macOS is not supported. ($(sw_vers -buildVersion))"
 		quitTool1
 	fi
 }
