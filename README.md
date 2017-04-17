@@ -38,7 +38,7 @@ NightPatch will revert using backup located at /Library/NightPatch. Enter this c
 
 If you deleted backup (or not backuped), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. (**Only for macOS 10.12.4 (16E195)**.)
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert -download`
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert -combo`
 
 ## Troubleshooting
 
