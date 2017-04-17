@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=60
+VERSION=61
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -72,7 +72,7 @@ function revertUsingCombo(){
 		fi
 		if [[ ! -f /usr/local/Cellar/xz/*/include/lzma.h ]]; then
 			applyRed
-			echo "ERROR : Requires lzma.
+			echo "ERROR : Requires lzma."
 			applyNocolor
 			echo "1. Install Homebrew. https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
