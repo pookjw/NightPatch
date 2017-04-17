@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=66
+VERSION=67
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -375,5 +375,6 @@ if [[ "${1}" == "-test" || "${2}" == "-test" || "${3}" == "-test" ]]; then
 	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
 	revertAll
 fi
+echo "Backup was saved on /Library/NightPatch."
 echo "Patch was done. Please reboot your Mac to complete."
 quitTool0
