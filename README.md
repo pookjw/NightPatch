@@ -12,6 +12,8 @@ Not compatible with some third-party monitors.
 
 Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
+Beta version is available on [Here](https://github.com/pookjw/NightPatch/blob/master/beta/about_beta.md).
+
 ## Supported macOS build
 
 - macOS 10.12.4 (16E195)
