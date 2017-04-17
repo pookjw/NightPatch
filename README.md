@@ -20,7 +20,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.5 Developer Preview 2 (16F54b)
 
-- **macOS 10.12.5 Developer Preview 3 (Coming soon)**
+- macOS 10.12.5 Developer Preview 3 (16F60a)
 
 - macOS 10.12.5 Public Beta 1 (16F43c)
 
