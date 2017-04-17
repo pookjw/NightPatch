@@ -32,7 +32,7 @@ Enter this command on Terminal **without $**.
 
 ## How to revert
 
-You can revert using backup located at /Library/NightPatch. Enter this command on Terminal **without $**.
+You can revert using backup located at /Library/NightPatch. (NightPatch creates backup automatically when you patch your macOS) Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert`
 
