@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=49
+VERSION=50
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -18,18 +18,6 @@ function removeTmp(){
 	fi
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
-	fi
-	if [[ -f NightPatch.zip ]]; then
-		rm NightPatch.zip
-	fi
-	if [[ -d NightPatch-master ]]; then
-		rm -rf NightPatch-master
-	fi
-	if [[ -f ~/NightPatch.zip ]]; then
-		rm ~/NightPatch.zip
-	fi
-	if [[ -d ~/NightPatch-master ]]; then
-		rm -rf ~/NightPatch-master
 	fi
 	if [[ -d /tmp/NightPatch-tmp ]]; then
 		echo "Cleaning..."
