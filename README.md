@@ -12,8 +12,6 @@ Not compatible with some third-party monitors.
 
 Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
-Beta version is available on [Here](https://github.com/pookjw/NightPatch/blob/master/beta/about_beta.md).
-
 ## Supported macOS build
 
 - macOS 10.12.4 (16E195)
@@ -34,7 +32,13 @@ Enter this command on Terminal **without $**.
 
 ## How to revert
 
+NightPatch will revert using backup located at /Library/NightPatch. Enter this command on Terminal **without $**.
+
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert`
+
+If you deleted backup (or not backuped), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. (**Only for macOS 10.12.4 (16E195)**.)
+
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; ./NightPatch.sh -revert -download`
 
 ## Troubleshooting
 

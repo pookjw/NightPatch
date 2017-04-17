@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=51
+VERSION=64
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -8,8 +8,7 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo
 	echo "./NightPatch.sh : Patch your macOS!"
 	echo "./NightPatch.sh -revert : Revert from backup."
-	# Available on beta version.
-	#echo "./NightPatch.sh -revert -downlaod : Revert using macOS Combo Update. (works without backup)"
+	echo "./NightPatch.sh -revert -downlaod : Revert using macOS Combo Update. (works without backup)"
 	exit 0
 fi
 
@@ -19,6 +18,16 @@ function removeTmp(){
 	fi
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
+	fi
+	if [[ -d /tmp/NightPatch-tmp ]]; then
+		echo "Cleaning..."
+		if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
+			hdiutil eject /tmp/NightPatch-tmp/macOSUpdate
+			if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
+				rm -rf /tmp/NightPatch-tmp/macOSUpdate
+			fi
+		fi
+		rm -rf /tmp/NightPatch-tmp
 	fi
 }
 
@@ -34,6 +43,9 @@ function revertAll(){
 			applyPurple
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			applyNoColor
+			if [[ "${1}" == "-rebootMessage" && "${2}" == "-rebootMessage" ]]; then
+				echo "Done. Please reboot your Mac to complete."
+			fi
 			if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
 				quitTool0
 			fi
@@ -49,6 +61,116 @@ function revertAll(){
 			quitTool1
 		fi
 	fi
+}
+
+function revertUsingCombo(){
+	if [[ -d "combo/$(sw_vers -buildVersion)" ]]; then
+		if [[ ! -d "$(xcode-select -p)" ]]; then
+			applyRed
+			echo "ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this."
+			quitTool1
+		fi
+		if [[ ! -d /usr/local/Cellar/xz ]]; then
+			applyRed
+			echo "ERROR : Requires lzma."
+			applyNoColor
+			echo "1. Install Homebrew. https://brew.sh"
+			echo "2. Enter 'brew install xz' command to install."
+			quitTool1
+		fi
+		if [[ ! -f /tmp/update.dmg ]]; then
+			if [[ ! -f "combo/$(sw_vers -buildVersion)/url.txt" ]]; then
+				applyRed
+				echo "ERROR : combo/$(sw_vers -buildVersion)/url.txt not found."
+				quitTool1
+			fi
+			if [[ -z "$(cat "combo/$(sw_vers -buildVersion)/url.txt")" ]]; then
+				applyRed
+				echo "ERROR : combo/$(sw_vers -buildVersion)/url.txt is wrong."
+				quitTool1
+			fi
+			echo "Downloading update..."
+			curl -o /tmp/update.dmg "$(cat "combo/$(sw_vers -buildVersion)/url.txt")"
+			if [[ ! -f /tmp/update.dmg ]]; then
+				applyRed
+				echo "ERROR : Failed to download file."
+				quitTool1
+			fi
+			echo "Done."
+		fi
+		if [[ -d /tmp/NightPatch-tmp ]]; then
+			rm -rf /tmp/NightPatch-tmp
+		fi
+		mkdir /tmp/NightPatch-tmp
+		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
+		curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
+		unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
+		cd /tmp/NightPatch-tmp/pbzx-master
+		echo "Compiling pbzx..."
+		clang -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
+		cp pbzx /tmp/NightPatch-tmp
+		if [[ ! -f /tmp/NightPatch-tmp/pbzx ]]; then
+			applyRed
+			echo "ERROR : Failed to compile pbzx."
+			quitTool1
+		fi
+		echo "Done."
+		if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
+			hdiutil eject /tmp/NightPatch-tmp/macOSUpdate
+			if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
+				rm -rf /tmp/NightPatch-tmp/macOSUpdate
+			fi
+		fi
+		hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
+		echo "Extracting... (1)"
+		pkgutil --expand /tmp/NightPatch-tmp/macOSUpdate/* /tmp/NightPatch-tmp/1
+		cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
+		if [[ ! -f Payload ]]; then
+			applyRed
+			echo "ERROR : Failed to extract pkg file."
+			quitTool1
+		fi
+		mv Payload /tmp/NightPatch-tmp
+		if [[ -d /tmp/NightPatch-tmp/2 ]]; then
+			rm -rf /tmp/NightPatch-tmp/2
+		fi
+		mkdir /tmp/NightPatch-tmp/2
+		cd /tmp/NightPatch-tmp/2
+		echo "Extracting... (2)"
+		/tmp/NightPatch-tmp/pbzx -n /tmp/NightPatch-tmp/Payload | cpio -i
+		echo "Creating backup from update..."
+		if [[ ! -f /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ]]; then
+			applyRed
+			echo "ERROR : CoreBrightness file not found."
+			quitTool1
+		fi
+		if [[ -d /Library/NightPatch ]]; then
+			sudo rm -rf /Library/NightPatch
+		fi
+		sudo mkdir /Library/NightPatch
+		sudo cp /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
+		sudo cp -r /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+		echo $(sw_vers -buildVersion) >> /tmp/NightPatchBuild
+		sudo mv /tmp/NightPatchBuild /Library/NightPatch
+		echo "Done. Reverting from backup..."
+	else
+		applyRed
+		echo "ERROR : Your macOS is not supported. ($(sw_vers -buildVersion))"
+		quitTool1
+	fi
+}
+
+# See https://github.com/NiklasRosenstein/pbzx
+function compilePBZX(){
+	CURRENT_DIR="$(pwd)"
+	echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
+	curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
+	unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
+	cd /tmp/NightPatch-tmp/pbzx-master
+	echo "Compiling pbzx..."
+	clang -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
+	cp pbzx /tmp/NightPatch-tmp
+	cd "${CURRENT_DIR}"
 }
 
 function moveOldBackup(){
@@ -183,7 +305,10 @@ if [[ "${1}" == "-moveOldBackup" ]]; then
 	quitTool0
 fi
 if [[ "${1}" == "-revert" ]]; then
-	revertAll
+	if [[ "${2}" == "-download" ]]; then
+		revertUsingCombo
+	fi
+	revertAll -rebootMessage
 fi
 applyRed
 if [[ ! -d patch ]]; then
@@ -216,18 +341,10 @@ if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		echo "Patching again..."
 	fi
 fi
-if [[ ! -d /Library/NightPatch ]]; then
-	sudo mkdir /Library/NightPatch/
+if [[ -d /Library/NightPatch ]]; then
+	sudo rm -rf /Library/NightPatch
 fi
-if [[ -f /Library/NightPatch/CoreBrightness.bak ]]; then
-	sudo rm /Library/NightPatch/CoreBrightness.bak
-fi
-if [[ -d /Library/NightPatch/_CodeSignature.bak ]]; then
-	sudo rm -rf /Library/NightPatch/_CodeSignature.bak
-fi
-if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
-	sudo rm /Library/NightPatch/NightPatchBuild
-fi
+sudo mkdir /Library/NightPatch
 if [[ -f /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch ]]; then
 	sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
 fi
