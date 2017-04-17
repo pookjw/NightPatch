@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=62
+VERSION=63
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -102,18 +102,19 @@ function revertUsingCombo(){
 			rm -rf /tmp/NightPatch-tmp
 		fi
 		mkdir /tmp/NightPatch-tmp
-		if [[ ! -f /tmp/NightPatch-tmp/pbzx ]]; then
-			compilePBZX
-			COMPILE_PBZX=YES
-		fi
+		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
+		curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
+		unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
+		cd /tmp/NightPatch-tmp/pbzx-master
+		echo "Compiling pbzx..."
+		clang -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
+		cp pbzx /tmp/NightPatch-tmp
 		if [[ ! -f /tmp/NightPatch-tmp/pbzx ]]; then
 			applyRed
 			echo "ERROR : Failed to compile pbzx."
 			quitTool1
 		fi
-		if [[ "${COMPILE_PBZX}" == YES ]]; then
-			echo "Done."
-		fi
+		echo "Done."
 		if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
 			hdiutil eject /tmp/NightPatch-tmp/macOSUpdate
 			if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
