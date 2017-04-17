@@ -4,7 +4,7 @@ This is beta version. Not stable yet.
 
 Enter this command on Terminal **without $**.
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh`
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh`
 
 # What's New?
 
@@ -14,8 +14,8 @@ Only for 10.12.4 (16E195).
 
 Revert using backup (old)
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh -revert`
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh -revert`
 
 Revert using macOS Combo Update (NEW)
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh -revert -download`
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master/beta; ./NightPatch.sh -revert -download`
