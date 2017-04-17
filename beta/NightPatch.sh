@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=50
+VERSION=52
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -43,6 +43,9 @@ function revertAll(){
 			applyPurple
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			applyNoColor
+			if [[ "${1}" == "-rebootMessage" && "${2}" == "-rebootMessage" ]]; then
+				echo "Done. Please reboot your Mac to complete."
+			fi
 			if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
 				quitTool0
 			fi
@@ -291,7 +294,7 @@ if [[ "${1}" == "-revert" ]]; then
 	if [[ "${2}" == "-download" ]]; then
 		revertUsingCombo
 	fi
-	revertAll
+	revertAll -rebootMessage
 fi
 applyRed
 if [[ ! -d patch ]]; then
