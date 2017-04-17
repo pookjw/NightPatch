@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=67
+VERSION=68
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -102,6 +102,7 @@ function revertUsingCombo(){
 			rm -rf /tmp/NightPatch-tmp
 		fi
 		mkdir /tmp/NightPatch-tmp
+		# See https://github.com/NiklasRosenstein/pbzx
 		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
 		curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
 		unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
@@ -158,19 +159,6 @@ function revertUsingCombo(){
 		echo "ERROR : Your macOS is not supported. ($(sw_vers -buildVersion))"
 		quitTool1
 	fi
-}
-
-# See https://github.com/NiklasRosenstein/pbzx
-function compilePBZX(){
-	CURRENT_DIR="$(pwd)"
-	echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
-	curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
-	unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
-	cd /tmp/NightPatch-tmp/pbzx-master
-	echo "Compiling pbzx..."
-	clang -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
-	cp pbzx /tmp/NightPatch-tmp
-	cd "${CURRENT_DIR}"
 }
 
 function moveOldBackup(){
