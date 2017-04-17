@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=65
+VERSION=66
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -305,7 +305,7 @@ if [[ "${1}" == "-moveOldBackup" ]]; then
 	quitTool0
 fi
 if [[ "${1}" == "-revert" ]]; then
-	if [[ "${2}" == "-combo" ]]; then
+	if [[ "${2}" == "combo" ]]; then
 		revertUsingCombo
 	fi
 	revertAll -rebootMessage
