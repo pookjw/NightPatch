@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=61
+VERSION=62
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -70,10 +70,10 @@ function revertUsingCombo(){
 			echo "ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this."
 			quitTool1
 		fi
-		if [[ ! -f /usr/local/Cellar/xz/*/include/lzma.h ]]; then
+		if [[ ! -d /usr/local/Cellar/xz ]]; then
 			applyRed
 			echo "ERROR : Requires lzma."
-			applyNocolor
+			applyNoColor
 			echo "1. Install Homebrew. https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
 			quitTool1
