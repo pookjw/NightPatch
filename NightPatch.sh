@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=68
+VERSION=69
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -64,7 +64,7 @@ function revertAll(){
 }
 
 function revertUsingCombo(){
-	if [[ -d "combo/$(sw_vers -buildVersion)" ]]; then
+	if [[ -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
 		if [[ ! -d "$(xcode-select -p)" ]]; then
 			applyRed
 			echo "ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this."
@@ -79,24 +79,21 @@ function revertUsingCombo(){
 			quitTool1
 		fi
 		if [[ ! -f /tmp/update.dmg ]]; then
-			if [[ ! -f "combo/$(sw_vers -buildVersion)/url.txt" ]]; then
+			downloadCombo
+		fi
+		if [[ ! "${skipCheckSHA}" == YES ]]; then
+			echo "Checking downloaded file..."
+			if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-$(sw_vers -buildVersion).txt")" ]]; then
 				applyRed
-				echo "ERROR : combo/$(sw_vers -buildVersion)/url.txt not found."
-				quitTool1
+				echo "ERROR : Downloaded file is wrong. Downloading again..."
+				applyNoColor
+				downloadCombo
+				if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-$(sw_vers -buildVersion).txt")" ]]; then
+					applyRed
+					echo "ERROR : SHA not matching."
+					quitTool1
+				fi
 			fi
-			if [[ -z "$(cat "combo/$(sw_vers -buildVersion)/url.txt")" ]]; then
-				applyRed
-				echo "ERROR : combo/$(sw_vers -buildVersion)/url.txt is wrong."
-				quitTool1
-			fi
-			echo "Downloading update..."
-			curl -o /tmp/update.dmg "$(cat "combo/$(sw_vers -buildVersion)/url.txt")"
-			if [[ ! -f /tmp/update.dmg ]]; then
-				applyRed
-				echo "ERROR : Failed to download file."
-				quitTool1
-			fi
-			echo "Done."
 		fi
 		if [[ -d /tmp/NightPatch-tmp ]]; then
 			rm -rf /tmp/NightPatch-tmp
@@ -159,6 +156,27 @@ function revertUsingCombo(){
 		echo "ERROR : Your macOS is not supported. ($(sw_vers -buildVersion))"
 		quitTool1
 	fi
+}
+
+function downloadCombo(){
+	if [[ ! -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
+			applyRed
+			echo "ERROR : combo/url-$(sw_vers -buildVersion).txt not found."
+			quitTool1
+		fi
+		if [[ -z "$(cat "combo/url-$(sw_vers -buildVersion).txt")" ]]; then
+			applyRed
+			echo "ERROR : combo/url-$(sw_vers -buildVersion).txt is wrong."
+			quitTool1
+		fi
+		echo "Downloading update..."
+		curl -o /tmp/update.dmg "$(cat "combo/url-$(sw_vers -buildVersion).txt")"
+		if [[ ! -f /tmp/update.dmg ]]; then
+			applyRed
+			echo "ERROR : Failed to download file."
+			quitTool1
+		fi
+		echo "Done."
 }
 
 function moveOldBackup(){
@@ -241,6 +259,7 @@ function checkSHA(){
 		fi
 	else
 		echo "SHA file not found."
+		quitTool1
 	fi
 }
 
@@ -288,12 +307,15 @@ if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]
 	echo "ERROR : Turn off System Integrity Protection before doing this."
 	quitTool1
 fi
+if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" ]]; then
+	skipCheckSHA=YES
+fi
 moveOldBackup
 if [[ "${1}" == "-moveOldBackup" ]]; then
 	quitTool0
 fi
-if [[ "${1}" == "-revert" ]]; then
-	if [[ "${2}" == "combo" ]]; then
+if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" ]]; then
+	if [[ "${1}" == "combo" || "${2}" == "combo" || "${3}" == "combo" ]]; then
 		revertUsingCombo
 	fi
 	revertAll -rebootMessage
@@ -344,7 +366,7 @@ sudo mv /tmp/NightPatchBuild /Library/NightPatch
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyRed
-if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == "-skipCheckSHA" ]]; then
+if [[ ! "${skipCheckSHA}" == YES ]]; then
 	checkSHA original
 fi
 sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch patch/$(sw_vers -buildVersion).patch
@@ -354,7 +376,7 @@ sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Version
 applyPurple
 sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 applyRed
-if [[ ! "${1}" == "-skipCheckSHA" && ! "${2}" == "-skipCheckSHA" && ! "${3}" == "-skipCheckSHA" ]]; then
+if [[ ! "${skipCheckSHA}" == YES ]]; then
 	checkSHA patched
 fi
 applyNoColor
