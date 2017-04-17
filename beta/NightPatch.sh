@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=53
+VERSION=54
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -65,7 +65,7 @@ function revertAll(){
 
 function revertUsingCombo(){
 	if [[ -d "combo/$(sw_vers -buildVersion)" ]]; then
-		if [[ ! "$(xcode-select -p)" == /Applications/Xcode.app/Contents/Developer ]]; then
+		if [[ "$(xcode-select -p)" == "xcode-select: error: unable to get active developer directory, use `sudo xcode-select --switch path/to/Xcode.app` to set one (or see `man xcode-select`)" ]]; then
 			applyRed
 			echo "ERROR : Required Command Line Tool. Enter 'xcode-select --install' command to install this."
 			quitTool1
