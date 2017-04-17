@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=55
+VERSION=56
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -67,7 +67,7 @@ function revertUsingCombo(){
 	if [[ -d "combo/$(sw_vers -buildVersion)" ]]; then
 		if [[ ! "$(xcode-select -p)" == "/Applications/Xcode.app/Contents/Developer" ]]; then
 			applyRed
-			echo "ERROR : Required Command Line Tool. Enter 'xcode-select --install' command to install this."
+			echo "ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this."
 			quitTool1
 		fi
 		if [[ ! -f "combo/$(sw_vers -buildVersion)/update.dmg" ]]; then
