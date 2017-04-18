@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=70
+VERSION=71
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -8,7 +8,7 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo
 	echo "./NightPatch.sh : Patch your macOS!"
 	echo "./NightPatch.sh -revert : Revert from backup."
-	echo "./NightPatch.sh -revert -downlaod : Revert using macOS Combo Update. (works without backup)"
+	echo "./NightPatch.sh -revert combo : Revert using macOS Combo Update. (works without backup)"
 	exit 0
 fi
 
