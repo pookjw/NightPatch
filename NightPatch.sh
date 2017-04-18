@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=71
+VERSION=72
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -102,7 +102,7 @@ function revertUsingCombo(){
 		# See https://github.com/NiklasRosenstein/pbzx
 		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
 		curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
-		unzip /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
+		unzip -o /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
 		cd /tmp/NightPatch-tmp/pbzx-master
 		echo "Compiling pbzx..."
 		clang -llzma -lxar -I /usr/local/include pbzx.c -o pbzx
