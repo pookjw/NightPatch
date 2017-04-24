@@ -28,7 +28,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.5 Public Beta 2 (16F54b)
 
-- **macOS 10.12.5 Public Beta 3 (Testing)**
+- macOS 10.12.5 Public Beta 3 (16F60a)
 
 ## How to patch
 
