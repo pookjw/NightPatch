@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=72
+VERSION=73
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -120,6 +120,9 @@ function revertUsingCombo(){
 			fi
 		fi
 		hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
+		applyLightCyan
+		echo "DO NOT OPEN $(ls /tmp/NightPatch-tmp/macOSUpdate)."
+		applyNoColor
 		echo "Extracting... (1)"
 		pkgutil --expand /tmp/NightPatch-tmp/macOSUpdate/* /tmp/NightPatch-tmp/1
 		cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
@@ -169,7 +172,7 @@ function downloadCombo(){
 			echo "ERROR : combo/url-$(sw_vers -buildVersion).txt is wrong."
 			quitTool1
 		fi
-		echo "Downloading update..."
+		echo "Downloading update... (takes a few minutes)"
 		curl -o /tmp/update.dmg "$(cat "combo/url-$(sw_vers -buildVersion).txt")"
 		if [[ ! -f /tmp/update.dmg ]]; then
 			applyRed
