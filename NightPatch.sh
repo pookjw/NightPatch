@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=73
+VERSION=74
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -163,23 +163,23 @@ function revertUsingCombo(){
 
 function downloadCombo(){
 	if [[ ! -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
-			applyRed
-			echo "ERROR : combo/url-$(sw_vers -buildVersion).txt not found."
-			quitTool1
-		fi
-		if [[ -z "$(cat "combo/url-$(sw_vers -buildVersion).txt")" ]]; then
-			applyRed
-			echo "ERROR : combo/url-$(sw_vers -buildVersion).txt is wrong."
-			quitTool1
-		fi
-		echo "Downloading update... (takes a few minutes)"
-		curl -o /tmp/update.dmg "$(cat "combo/url-$(sw_vers -buildVersion).txt")"
-		if [[ ! -f /tmp/update.dmg ]]; then
-			applyRed
-			echo "ERROR : Failed to download file."
-			quitTool1
-		fi
-		echo "Done."
+		applyRed
+		echo "ERROR : combo/url-$(sw_vers -buildVersion).txt not found."
+		quitTool1
+	fi
+	if [[ -z "$(cat "combo/url-$(sw_vers -buildVersion).txt")" ]]; then
+		applyRed
+		echo "ERROR : combo/url-$(sw_vers -buildVersion).txt is wrong."
+		quitTool1
+	fi
+	echo "Downloading update... (takes a few minutes)"
+	curl -o /tmp/update.dmg "$(cat "combo/url-$(sw_vers -buildVersion).txt")"
+	if [[ ! -f /tmp/update.dmg ]]; then
+		applyRed
+		echo "ERROR : Failed to download file."
+		quitTool1
+	fi
+	echo "Done."
 }
 
 function moveOldBackup(){
