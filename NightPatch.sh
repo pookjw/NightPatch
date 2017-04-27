@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=74
+VERSION=75
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -151,6 +151,9 @@ function revertUsingCombo(){
 		sudo mkdir /Library/NightPatch
 		sudo cp /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
 		sudo cp -r /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+		if [[ -f /tmp/NightPatchBuild ]]; then
+			sudo rm /tmp/NightPatchBuild
+		fi
 		echo $(sw_vers -buildVersion) >> /tmp/NightPatchBuild
 		sudo mv /tmp/NightPatchBuild /Library/NightPatch
 		echo "Done. Reverting from backup..."
@@ -364,6 +367,9 @@ fi
 applyRed
 sudo cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
 sudo cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+if [[ -f /tmp/NightPatchBuild ]]; then
+	sudo rm /tmp/NightPatchBuild
+fi
 echo $(sw_vers -buildVersion) >> /tmp/NightPatchBuild
 sudo mv /tmp/NightPatchBuild /Library/NightPatch
 applyPurple
