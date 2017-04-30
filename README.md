@@ -50,10 +50,26 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 ## Troubleshooting
 
-- patch/BUILD.patch is missing.
+- patch/[BUILD].patch is missing.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
 
 - ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
 
 : [Solution](http://apple.stackexchange.com/a/209530)
+
+- ERROR : SHA not matching. Patch was failed.
+
+: Seems like your macOS system file was damaged or patched by other tool or not supported. Try this command to replace original system file to your macOS. (will download from Apple. **Only for macOS 10.12.4 (16E195)**.)
+
+`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
+
+And try patch again.
+
+- ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this.
+
+: Try 'xcode-select --install' command.
+
+- ERROR : Requires lzma.
+
+: Install **brew** from [here](https://brew.sh) and try `brew install xz` command.
