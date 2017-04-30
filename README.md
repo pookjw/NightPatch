@@ -68,7 +68,7 @@ And try patch again.
 
 - ERROR : Requires Command Line Tool. Enter `xcode-select --install` command to install this.
 
-: Try 'xcode-select --install' command.
+: Try `xcode-select --install` command.
 
 - ERROR : Requires lzma.
 
