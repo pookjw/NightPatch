@@ -66,7 +66,7 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 And try patch again.
 
-- ERROR : Requires Command Line Tool. Enter 'xcode-select --install' command to install this.
+- ERROR : Requires Command Line Tool. Enter `xcode-select --install` command to install this.
 
 : Try 'xcode-select --install' command.
 
