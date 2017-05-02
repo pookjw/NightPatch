@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=75
+VERSION=76
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -265,6 +265,7 @@ function checkSHA(){
 		fi
 	else
 		echo "SHA file not found."
+		revertAll -doNotQuit
 		quitTool1
 	fi
 }
