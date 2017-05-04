@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=86
+VERSION=87
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -295,7 +295,7 @@ function checkSHA(){
 			applyRed
 			echo "ERROR : SHA not matching. Patch was failed. ($(sw_vers -buildVersion)-${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
 			applyNoColor
-			echo "Seems like your macOS system file was damaged or already patched by other tools."
+			echo "Seems like your macOS system file was damaged or already patched by other tool."
 			if [[ -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
 				echo "Try this command to repair system file. \033[1;31mDo not type $\033[0m. (takes a few minutes)"
 				echo
