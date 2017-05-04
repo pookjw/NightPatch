@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=84
+VERSION=85
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -337,11 +337,13 @@ function showCommandGuide(){
 function showLines(){
 	PRINTED_COUNTS=0
 	COLS=`tput cols`
-	while [[ ! ${PRINTED_COUNTS} == $COLS ]]; do
-		printf "${1}"
-		PRINTED_COUNTS=$((${PRINTED_COUNTS}+1))
-	done
-	echo
+	if [ "${COLS}" -ge 0 ]; then
+		while [[ ! ${PRINTED_COUNTS} == $COLS ]]; do
+			printf "${1}"
+			PRINTED_COUNTS=$((${PRINTED_COUNTS}+1))
+		done
+		echo
+	fi
 }
 
 function applyRed(){
