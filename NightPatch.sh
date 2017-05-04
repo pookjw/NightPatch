@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=83
+VERSION=84
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -372,6 +372,15 @@ function quitTool1(){
 	exit 1
 }
 
+showLines "*"
+echo "NightPatch.sh by @pookjw. Version : ${VERSION}"
+showLines "*"
+if [[ "${BUILD}" == beta ]]; then
+	echo "**WARNING : This is beta version. I don't guarantee of any problems."
+	applyLightCyan
+	read -s -n 1 -p "Press any key to continue..."
+	applyNoColor
+fi
 applyRed
 if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
 	MACOS_ERROR=YES
@@ -390,16 +399,6 @@ if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]
 fi
 if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" ]]; then
 	skipCheckSHA=YES
-fi
-applyNoColor
-showLines "*"
-echo "NightPatch.sh by @pookjw. Version : ${VERSION}"
-showLines "*"
-if [[ "${BUILD}" == beta ]]; then
-	echo "**WARNING : This is beta version. I don't guarantee of any problems."
-	applyLightCyan
-	read -s -n 1 -p "Press any key to continue..."
-	applyNoColor
 fi
 moveOldBackup
 if [[ "${1}" == "-moveOldBackup" ]]; then
