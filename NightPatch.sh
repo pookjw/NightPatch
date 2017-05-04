@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=80
+VERSION=81
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -58,7 +58,21 @@ function revertAll(){
 			fi
 		fi
 	else
-		echo "No backup."
+		if [[ -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
+			showLines "*"
+			applyRed
+			echo "ERROR : No backup."
+			applyNoColor
+			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
+			echo
+			showCommandGuide "-revert combo"
+			echo
+			showLines "*"
+		else
+			applyRed
+			echo "ERROR : No backup."
+			applyNoColor
+		fi
 		if [[ ! "${1}" == "-doNotQuit" && ! "${2}" == "-doNotQuit" ]]; then
 			quitTool1
 		fi
@@ -275,14 +289,14 @@ function checkSHA(){
 			applyRed
 			echo "ERROR : SHA not matching. Patch was failed. ($(sw_vers -buildVersion)-${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
 			applyNoColor
-			echo "Seems like your macOS filesystem was damaged or already patched by other tools."
+			echo "Seems like your macOS system file was damaged or already patched by other tools."
 			if [[ -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
-				echo "Try this command to repair filesystem. (takes a few minutes)"
+				echo "Try this command to repair system file. \033[1;31mDo not type $\033[0m. (takes a few minutes)"
 				echo
 				showCommandGuide "-revert combo"
 			fi
 			echo
-			echo "If you want to patch your macOS by force, Try this command but this is not recommended."
+			echo "If you want to patch your macOS by force, Try this command but this is not recommended. \033[1;31mDo not type $\033[0m."
 			echo
 			showCommandGuide "-skipCheckSHA"
 			echo
@@ -296,7 +310,7 @@ function checkSHA(){
 		applyRed
 		echo "ERROR : SHA file not found."
 		applyNoColor
-		echo "If you want to patch your macOS by force, Try this command but this is not recommended."
+		echo "If you want to patch your macOS by force, Try this command but this is not recommended. \033[1;31mDo not type $.\033[0m"
 		echo
 		showCommandGuide "-skipCheckSHA"
 		echo
@@ -308,9 +322,9 @@ function checkSHA(){
 
 function showCommandGuide(){
 	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
-		echo "$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+		echo "\033[1;31m$\033[0m cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
 	else
-		echo "$ ./NightPatch.sh ${1}"
+		echo "\033[1;31m$\033[0m ./NightPatch.sh ${1}"
 	fi
 }
 
