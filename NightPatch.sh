@@ -1,6 +1,6 @@
 #!/bin/sh
-VERSION=77
-BUILD=beta
+VERSION=78
+BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "NightPatch | Version : ${VERSION} ${BUILD}"
@@ -73,11 +73,14 @@ function revertUsingCombo(){
 			quitTool1
 		fi
 		if [[ ! -d /usr/local/Cellar/xz ]]; then
+			showLines "*"
 			applyRed
 			echo "ERROR : Requires lzma."
 			applyNoColor
 			echo "1. Install Homebrew. https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
+			echo
+			showLines "*"
 			quitTool1
 		fi
 		if [[ ! -f /tmp/update.dmg ]]; then
