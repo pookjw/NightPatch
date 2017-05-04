@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=82
+VERSION=83
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -391,6 +391,16 @@ fi
 if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" ]]; then
 	skipCheckSHA=YES
 fi
+applyNoColor
+showLines "*"
+echo "NightPatch.sh by @pookjw. Version : ${VERSION}"
+showLines "*"
+if [[ "${BUILD}" == beta ]]; then
+	echo "**WARNING : This is beta version. I don't guarantee of any problems."
+	applyLightCyan
+	read -s -n 1 -p "Press any key to continue..."
+	applyNoColor
+fi
 moveOldBackup
 if [[ "${1}" == "-moveOldBackup" ]]; then
 	quitTool0
@@ -411,13 +421,6 @@ if [[ ! -f "patch/$(sw_vers -buildVersion).patch" ]]; then
 	quitTool1
 fi
 applyNoColor
-echo "NightPatch.sh by @pookjw. Version : ${VERSION}"
-if [[ "${BUILD}" == beta ]]; then
-	echo "**WARNING : This is beta version. I don't guarantee of any problems."
-	applyLightCyan
-	read -s -n 1 -p "Press any key to continue..."
-	applyNoColor
-fi
 sudo touch /System/test
 if [[ ! -f /System/test ]]; then
 	applyRed
