@@ -1,6 +1,6 @@
 #!/bin/sh
-VERSION=76
-BUILD=
+VERSION=77
+BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "NightPatch | Version : ${VERSION} ${BUILD}"
@@ -35,7 +35,9 @@ function revertAll(){
 	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "$(sw_vers -buildVersion)" ]]; then
 			if [[ ! "${1}" == "-doNotPrint" && ! "${2}" == "-doNotPrint" ]]; then
+				applyLightCyan
 				echo "Reverting..."
+				applyNoColor
 			fi
 			sudo cp /Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo rm -rf /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
@@ -83,6 +85,12 @@ function revertUsingCombo(){
 		fi
 		if [[ ! "${skipCheckSHA}" == YES ]]; then
 			echo "Checking downloaded file..."
+			if [[ ! -f "combo/sha-$(sw_vers -buildVersion).txt" ]]; then
+				applyRed
+				echo "ERROR : I can't find combo/sha-$(sw_vers -buildVersion).txt file."
+				applyNoColor
+				quitTool1
+			fi
 			if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-$(sw_vers -buildVersion).txt")" ]]; then
 				applyRed
 				echo "ERROR : Downloaded file is wrong. Downloading again..."
@@ -259,15 +267,58 @@ function moveOldBackup(){
 function checkSHA(){
 	if [[ -f "sha/sha-$(sw_vers -buildVersion)_${1}.txt" ]]; then
 		if [[ ! "$(cat "sha/sha-$(sw_vers -buildVersion)_${1}.txt")" == "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" ]]; then
-			echo "ERROR : SHA not matching. Patch was failed. (${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
+			applyNoColor
+			showLines "*"
+			applyRed
+			echo "ERROR : SHA not matching. Patch was failed. ($(sw_vers -buildVersion)-${1}-$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }'))"
+			applyNoColor
+			echo "Seems like your macOS filesystem was damaged, or already patched by other tools."
+			if [[ -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
+				echo "Try this command to repair filesystem. (takes a few minutes)"
+				echo
+				showCommandGuide "-revert combo"
+			fi
+			echo
+			echo "If you want to patch your macOS by force, Try this command but this is not recommended."
+			echo
+			showCommandGuide "-skipCheckSHA"
+			echo
+			showLines "*"
 			revertAll -doNotQuit
 			quitTool1
 		fi
 	else
-		echo "SHA file not found."
+		applyNoColor
+		showLines "*"
+		applyRed
+		echo "ERROR : SHA file not found."
+		applyNoColor
+		echo "If you want to patch your macOS by force, Try this command but this is not recommended."
+		echo
+		showCommandGuide "-skipCheckSHA"
+		echo
+		showLines "*"
 		revertAll -doNotQuit
 		quitTool1
 	fi
+}
+
+function showCommandGuide(){
+	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
+		echo "$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+	else
+		echo "$ ./NightPatch.sh ${1}"
+	fi
+}
+
+function showLines(){
+	PRINTED_COUNTS=0
+	COLS=`tput cols`
+	while [[ ! ${PRINTED_COUNTS} == $COLS ]]; do
+		printf "${1}"
+		PRINTED_COUNTS=$((${PRINTED_COUNTS}+1))
+	done
+	echo
 }
 
 function applyRed(){
@@ -329,11 +380,11 @@ if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" ]]; then
 fi
 applyRed
 if [[ ! -d patch ]]; then
-	echo "patch folder is missing. Try again."
+	echo "I can't find patch folder.. Try again."
 	quitTool1
 fi
 if [[ ! -f "patch/$(sw_vers -buildVersion).patch" ]]; then
-	echo "patch/$(sw_vers -buildVersion).patch is missing. (seems like not supported macOS)"
+	echo "I can't find patch/$(sw_vers -buildVersion).patch file. (seems like not supported macOS)"
 	quitTool1
 fi
 applyNoColor
