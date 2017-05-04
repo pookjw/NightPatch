@@ -68,7 +68,7 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
 
-And try patch again.
+And patch again.
 
 - ERROR : Requires Command Line Tool. Enter `xcode-select --install` command to install this.
 
