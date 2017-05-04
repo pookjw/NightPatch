@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=85
+VERSION=86
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -198,7 +198,7 @@ function revertUsingCombo(){
 function downloadCombo(){
 	if [[ ! -f "combo/url-$(sw_vers -buildVersion).txt" ]]; then
 		applyRed
-		echo "ERROR : combo/url-$(sw_vers -buildVersion).txt not found."
+		echo "ERROR : I can't find combo/url-$(sw_vers -buildVersion).txt file."
 		quitTool1
 	fi
 	if [[ -z "$(cat "combo/url-$(sw_vers -buildVersion).txt")" ]]; then
