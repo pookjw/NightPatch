@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=79
+VERSION=80
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -361,7 +361,7 @@ elif [[ "$(sw_vers -productVersion | cut -d"." -f2)" == 12 ]]; then
 	fi
 fi
 if [[ "${MACOS_ERROR}" == YES ]]; then
-	echo "Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
+	echo "ERROR : Requires macOS 10.12.4 or higher. (Detected version : $(sw_vers -productVersion))"
 	quitTool1
 fi
 if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
@@ -383,11 +383,11 @@ if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" ]]; then
 fi
 applyRed
 if [[ ! -d patch ]]; then
-	echo "I can't find patch folder.. Try again."
+	echo "ERROR : I can't find patch folder. Try again."
 	quitTool1
 fi
 if [[ ! -f "patch/$(sw_vers -buildVersion).patch" ]]; then
-	echo "I can't find patch/$(sw_vers -buildVersion).patch file. (seems like not supported macOS)"
+	echo "ERROR : I can't find patch/$(sw_vers -buildVersion).patch file. (seems like not supported macOS)"
 	quitTool1
 fi
 applyNoColor
