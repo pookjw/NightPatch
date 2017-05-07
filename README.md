@@ -42,7 +42,7 @@ Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh`
 
-![Image](https://dl.dropboxusercontent.com/content_link/fAB4O5KbalVAswmrlI1VYELfND5ra8tfBP531abDCgJ59u6TEhat6EnJbK0VD3m5/file?dl=1)
+![Image](Image.gif)
 
 ## How to revert
 
