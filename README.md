@@ -14,7 +14,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Supported macOS build
 
-[View](Supported_macOS_build.md)
+[View](macOS_list.md)
 
 ## How to patch
 

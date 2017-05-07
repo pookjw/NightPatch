@@ -1,4 +1,8 @@
+# Normal Release
+
 - macOS 10.12.4 (16E195)
+
+# Developer Beta
 
 - macOS 10.12.5 Developer Beta 1 (16F43c)
 
@@ -9,6 +13,8 @@
 - macOS 10.12.5 Developer Beta 4 (16F67a)
 
 - macOS 10.12.5 Developer Beta 5 (16F71b)
+
+# Public Beta
 
 - macOS 10.12.5 Public Beta 1 (16F43c)
 
