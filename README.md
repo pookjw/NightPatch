@@ -46,6 +46,10 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 ## Troubleshooting
 
+- 'Password:' ???
+
+: Enter your login password.
+
 - ERROR : I can't find patch/[BUILD].patch file.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
