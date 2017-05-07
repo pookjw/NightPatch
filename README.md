@@ -14,7 +14,13 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Supported macOS build
 
-[View](macOS_list.md)
+- macOS 10.12.4 (16E195)
+
+- macOS 10.12.5 Developer Beta 5 (16F71b)
+
+- macOS 10.12.5 Public Beta 5 (16F71b)
+
+[View more](macOS_list.md)
 
 ## How to patch
 
