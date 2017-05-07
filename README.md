@@ -44,7 +44,7 @@ Enter this command on Terminal **without $**.
 
 ▼ GIF ▼
 
-![Image](Image.gif)
+![Image](Image1.gif)
 
 ▲ GIF ▲
 
