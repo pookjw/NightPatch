@@ -44,7 +44,7 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 `$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
 
-## Troubleshooting
+## Troubleshootings
 
 - 'Password:' ???
 
