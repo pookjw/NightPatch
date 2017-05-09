@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=88
+VERSION=89
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -383,6 +383,12 @@ if [[ "${BUILD}" == beta ]]; then
 	read -s -n 1 -p "Press any key to continue..."
 	applyNoColor
 fi
+if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" || "${4}" == "-skipCheckSHA" || "${5}" == "-skipCheckSHA" || "${6}" == "-skipCheckSHA" || "${7}" == "-skipCheckSHA" || "${8}" == "-skipCheckSHA" || "${9}" == "-skipCheckSHA" ]]; then
+	applyPurple
+	echo "skipCheckSHA=YES"
+	applyNoColor
+	skipCheckSHA=YES
+fi
 applyRed
 if [[ "$(sw_vers -productVersion | cut -d"." -f2)" -lt 12 ]]; then
 	MACOS_ERROR=YES
@@ -399,19 +405,30 @@ if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]
 	echo "ERROR : Turn off System Integrity Protection before doing this."
 	quitTool1
 fi
-if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" ]]; then
-	skipCheckSHA=YES
-fi
-moveOldBackup
-if [[ "${1}" == "-moveOldBackup" ]]; then
+if [[ "${1}" == "-moveOldBackup" || "${2}" == "-moveOldBackup" || "${3}" == "-moveOldBackup" || "${4}" == "-moveOldBackup" || "${5}" == "-moveOldBackup" || "${6}" == "-moveOldBackup" || "${7}" == "-moveOldBackup" || "${8}" == "-moveOldBackup" || "${9}" == "-moveOldBackup" ]]; then
+	applyLightCyan
+	echo "mode : moveOldBackup"
+	applyNoColor
+	moveOldBackup
 	quitTool0
 fi
-if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" ]]; then
-	if [[ "${1}" == "combo" || "${2}" == "combo" || "${3}" == "combo" ]]; then
+moveOldBackup
+if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" || "${4}" == "-revert" || "${5}" == "-revert" || "${6}" == "-revert" || "${7}" == "-revert" || "${8}" == "-revert" || "${9}" == "-revert" ]]; then
+	if [[ "${1}" == "combo" || "${2}" == "combo" || "${3}" == "combo" || "${4}" == "combo" || "${5}" == "combo" || "${6}" == "combo" || "${7}" == "combo" || "${8}" == "combo" || "${9}" == "combo" ]]; then
+		applyLightCyan
+		echo "mode : revertUsingCombo"
+		applyNoColor
 		revertUsingCombo
+	else
+		applyLightCyan
+		echo "mode : revert"
+		applyNoColor
 	fi
 	revertAll -rebootMessage
 fi
+applyLightCyan
+echo "mode : patch"
+applyNoColor
 applyRed
 if [[ ! -d patch ]]; then
 	echo "ERROR : I can't find patch folder. Try again."
@@ -468,11 +485,6 @@ if [[ ! "${skipCheckSHA}" == YES ]]; then
 	checkSHA patched
 fi
 applyNoColor
-if [[ "${1}" == "-test" || "${2}" == "-test" || "${3}" == "-test" ]]; then
-	echo "Original CoreBrightness : $(shasum /Library/NightPatch/CoreBrightness.bak)"
-	echo "Patched CoreBrightness : $(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness)"
-	revertAll
-fi
 echo "Backup was saved on \033[1;36m/Library/NightPatch\033[0m."
 echo "Patch was done. Please reboot your Mac to complete."
 quitTool0
