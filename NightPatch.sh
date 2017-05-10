@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=92
+VERSION=93
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -527,8 +527,7 @@ setBuild
 moveOldBackup
 if [[ "${mode}" == moveOldBackup ]]; then
 	quitTool0
-fi
-if [[ "${mode}" == revertUsingCombo ]]; then
+elif [[ "${mode}" == revertUsingCombo ]]; then
 	revertUsingCombo
 	revertAll -rebootMessage
 elif [[ "${mode}" == revert ]]; then
