@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=91
+VERSION=92
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -524,11 +524,10 @@ checkSystem
 setToolMode "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}"
 echo
 setBuild
+moveOldBackup
 if [[ "${mode}" == moveOldBackup ]]; then
-	moveOldBackup
 	quitTool0
 fi
-moveOldBackup
 if [[ "${mode}" == revertUsingCombo ]]; then
 	revertUsingCombo
 	revertAll -rebootMessage
