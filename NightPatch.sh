@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=93
+VERSION=94
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -31,7 +31,7 @@ function removeTmp(){
 	fi
 }
 
-function revertAll(){
+function revertSystem(){
 	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "${SYSTEM_BUILD}" ]]; then
 			if [[ ! "${1}" == "-doNotPrint" && ! "${2}" == "-doNotPrint" ]]; then
@@ -188,6 +188,7 @@ function revertUsingCombo(){
 		echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 		sudo mv /tmp/NightPatchBuild /Library/NightPatch
 		echo "Done. Reverting from backup..."
+		revertSystem -rebootMessage
 	else
 		applyRed
 		echo "ERROR : Your macOS is not supported. (${SYSTEM_BUILD})"
@@ -311,7 +312,7 @@ function checkSHA(){
 			showCommandGuide "-skipCheckSHA"
 			echo
 			showLines "*"
-			revertAll -doNotQuit
+			revertSystem -doNotQuit
 			quitTool1
 		fi
 	else
@@ -325,7 +326,7 @@ function checkSHA(){
 		showCommandGuide "-skipCheckSHA"
 		echo
 		showLines "*"
-		revertAll -doNotQuit
+		revertSystem -doNotQuit
 		quitTool1
 	fi
 }
@@ -379,7 +380,7 @@ function patchSystem(){
 	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "${SYSTEM_BUILD}" ]]; then
 			echo "Detected backup. Reverting..."
-			revertAll -doNotQuit -doNotPrint
+			revertSystem -doNotQuit -doNotPrint
 			echo "Patching again..."
 		fi
 	fi
@@ -529,9 +530,8 @@ if [[ "${mode}" == moveOldBackup ]]; then
 	quitTool0
 elif [[ "${mode}" == revertUsingCombo ]]; then
 	revertUsingCombo
-	revertAll -rebootMessage
 elif [[ "${mode}" == revert ]]; then
-	revertAll -rebootMessage
+	revertSystem -rebootMessage
 elif [[ "${mode}" == patch ]]; then
 	patchSystem
 fi
