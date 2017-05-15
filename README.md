@@ -16,9 +16,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.4 (16E195)
 
-- macOS 10.12.5 Developer Beta 5 (16F71b)
-
-- macOS 10.12.5 Public Beta 5 (16F71b)
+- macOS 10.12.5 (Coming Soon! I'm updating now!)
 
 [View more](macOS_list.md)
 
