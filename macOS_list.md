@@ -2,6 +2,8 @@
 
 - macOS 10.12.4 (16E195)
 
+- macOS 10.12.5 (16F73)
+
 # Developer Beta
 
 - macOS 10.12.5 Developer Beta 1 (16F43c)
