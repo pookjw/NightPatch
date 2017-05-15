@@ -26,7 +26,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 Enter this command on Terminal **without $**.
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh`
 
 ▼ GIF ▼
 
@@ -38,11 +38,11 @@ Enter this command on Terminal **without $**.
 
 You can revert using backup located at /Library/NightPatch. (NightPatch creates backup automatically when you patch your macOS) Enter this command on Terminal **without $**.
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert`
 
 If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. (**Only for macOS 10.12.4 (16E195)**.)
 
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
 
 ## Troubleshootings
 
@@ -57,19 +57,3 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 - ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
 
 : [Solution](http://apple.stackexchange.com/a/209530)
-
-- ERROR : SHA not matching. Patch was failed.
-
-: Seems like your macOS system file was damaged or patched by other tool or not supported. Try this command to replace original system file to your macOS. (will download from Apple. **Only for macOS 10.12.4 (16E195)**.)
-
-`$ cd /tmp; curl -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
-
-And patch again.
-
-- ERROR : Requires Command Line Tool. Enter `xcode-select --install` command to install this.
-
-: Try `xcode-select --install` command.
-
-- ERROR : Requires lzma.
-
-: Install **brew** from [here](https://brew.sh) and try `brew install xz` command.
