@@ -1,7 +1,6 @@
 #!/bin/sh
-VERSION=95
+VERSION=96
 BUILD=
-DEFAULT_MODE=patch
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "NightPatch | Version : ${VERSION} ${BUILD}"
@@ -421,6 +420,7 @@ function codesignCB(){
 }
 
 function setToolMode(){
+	mode=patch
 	if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" || "${4}" == "-skipCheckSHA" || "${5}" == "-skipCheckSHA" || "${6}" == "-skipCheckSHA" || "${7}" == "-skipCheckSHA" || "${8}" == "-skipCheckSHA" || "${9}" == "-skipCheckSHA" ]]; then
 		echo "skipCheckSHA=\033[1;36mYES\033[0m"
 		skipCheckSHA=YES
@@ -445,13 +445,6 @@ function setToolMode(){
 			echo "mode=\033[1;36mrevert\033[0m"
 			mode=revert
 		fi
-	fi
-	if [[ -z "${mode}" ]]; then
-		mode="${DEFAULT_MODE}"
-	fi
-	if [[ "${1}" == "-patch" || "${2}" == "-patch" || "${3}" == "-patch" || "${4}" == "-patch" || "${5}" == "-patch" || "${6}" == "-patch" || "${7}" == "-patch" || "${8}" == "-patch" || "${9}" == "-patch" ]]; then
-		echo "mode=\033[1;36mpatch\033[0m"
-		mode=patch
 	fi
 	if [[ "${mode}" == patch ]]; then
 		echo "mode=\033[1;36mpatch\033[0m"
