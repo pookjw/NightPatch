@@ -14,8 +14,6 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Supported macOS build
 
-- macOS 10.12.4 (16E195)
-
 - macOS 10.12.5 (16F73)
 
 [View more](macOS_list.md)
