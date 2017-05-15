@@ -57,3 +57,9 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 - ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
 
 : [Solution](http://apple.stackexchange.com/a/209530)
+
+## Document for developers
+
+- [Creating patch file for NightPatch (for unsupported macOS build)](https://github.com/pookjw/NightPatch/wiki/Creating-patch-file)
+
+- [NightPatch Options](https://github.com/pookjw/NightPatch/wiki/NightPatch-options)
