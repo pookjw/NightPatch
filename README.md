@@ -30,7 +30,7 @@ Enter this command on Terminal **without $**.
 
 ▼ GIF ▼
 
-![Image](https://raw.githubusercontent.com/pookjw/gif/master/Image1.gif)
+![Image](https://raw.githubusercontent.com/pookjw/gif/master/Image2.gif)
 
 ▲ GIF ▲
 
