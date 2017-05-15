@@ -60,6 +60,6 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 ## Document for developers
 
-- [Creating patch file for NightPatch (for unsupported macOS build)](https://github.com/pookjw/NightPatch/wiki/Creating-patch-file)
+- [Creating patch file](https://github.com/pookjw/NightPatch/wiki/Creating-patch-file) (for unsupported macOS build)
 
-- [NightPatch Options](https://github.com/pookjw/NightPatch/wiki/NightPatch-options)
+- [NightPatch options](https://github.com/pookjw/NightPatch/wiki/NightPatch-options)
