@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=97
+VERSION=98
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -223,7 +223,6 @@ function downloadCombo(){
 		echo "\033[1;31mERROR : Failed to download file.\033[0m"
 		quitTool1
 	fi
-	echo "Done."
 }
 
 function moveOldBackup(){
@@ -529,8 +528,3 @@ elif [[ "${mode}" == revert ]]; then
 elif [[ "${mode}" == patch ]]; then
 	patchSystem
 fi
-
-
-### > /dev/null 2>&1
-
-
