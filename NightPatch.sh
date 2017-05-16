@@ -1,14 +1,21 @@
 #!/bin/sh
-VERSION=96
+VERSION=97
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
-	echo "NightPatch | Version : ${VERSION} ${BUILD}"
-	echo "Enable Night Shift on any old Mac models."
+	echo "./NightPatch.sh : Patch macOS."
+	echo "I introduce a few NightPatch options."
 	echo
-	echo "./NightPatch.sh : Patch your macOS!"
-	echo "./NightPatch.sh -revert : Revert from backup."
-	echo "./NightPatch.sh -revert combo : Revert using macOS Combo Update. (works without backup)"
+	echo "./NightPatch.sh [option]"
+	echo "-revert : Revert using backup."
+	echo "-revert combo : Revert using macOS Combo uptate. (works without backup)"
+	echo "-skipCheckSHA : Skip checking SHA1 verification."
+	echo "-customBuild : Set fake system build."
+	echo "-verbose : verbose mode."
+	echo
+	echo "example)"
+	echo "$ ./NightPatch.sh -revert combo -customBuild"
+	echo "$ ./NightPatch.sh -skipCheckSHA -verbose"
 	exit 0
 fi
 
@@ -189,7 +196,7 @@ function revertUsingCombo(){
 		fi
 		echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 		sudo mv /tmp/NightPatchBuild /Library/NightPatch
-		echo "Done. Reverting from backup..."
+		echo "Reverting from backup..."
 		revertSystem -rebootMessage -doNotPrint
 	else
 		echo "\033[1;31mERROR : Your macOS is not supported. (${SYSTEM_BUILD})\033[0m"
