@@ -56,7 +56,7 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 : [Solution](http://apple.stackexchange.com/a/209530)
 
-## Document for developers
+## Document for expert
 
 - [Creating patch file](https://github.com/pookjw/NightPatch/wiki/Creating-patch-file) (for unsupported macOS build)
 
