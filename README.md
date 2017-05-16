@@ -44,6 +44,10 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 ## Troubleshootings
 
+- ERROR : Turn off System Integrity Protection before doing this.
+
+: [Solution](http://apple.stackexchange.com/a/209530)
+
 - 'Password:' ???
 
 : Enter your login password.
@@ -51,10 +55,6 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 - ERROR : I can't find patch/[BUILD].patch file.
 
 : That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
-
-- ERROR : Turn off System Integrity Protection before doing this. / ERROR : Can't write a file to root.
-
-: [Solution](http://apple.stackexchange.com/a/209530)
 
 ## Document for expert
 

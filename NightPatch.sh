@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=99
+VERSION=100
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -25,6 +25,9 @@ function removeTmp(){
 	fi
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
+	fi
+	if [[ -f /System/test ]]; then
+		sudo rm /System/test
 	fi
 	cleanComboProcess
 }
@@ -145,16 +148,7 @@ function revertUsingCombo(){
 			echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 			quitTool1
 		fi
-		if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
-			if [[ "${verbose}" == YES ]]; then
-				hdiutil eject /tmp/NightPatch-tmp/macOSUpdate
-			else
-				hdiutil eject /tmp/NightPatch-tmp/macOSUpdate > /dev/null 2>&1
-			fi
-			if [[ -d /tmp/NightPatch-tmp/macOSUpdate ]]; then
-				rm -rf /tmp/NightPatch-tmp/macOSUpdate
-			fi
-		fi
+		echo "Mounting disk image..."
 		if [[ "${verbose}" == YES ]]; then
 			hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
 		else
@@ -181,6 +175,7 @@ function revertUsingCombo(){
 			/tmp/NightPatch-tmp/pbzx -n /tmp/NightPatch-tmp/Payload | cpio -i > /dev/null 2>&1
 		fi
 		echo "Creating backup from update..."
+		checkRoot
 		if [[ ! -f /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ]]; then
 			echo "\033[1;31mERROR : CoreBrightness file not found.\033[0m"
 			quitTool1
@@ -420,11 +415,22 @@ function codesignCB(){
 }
 
 function checkRoot(){
-	sudo touch /System/test
-	if [[ ! -f /System/test ]]; then
-		echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
-		quitTool1
-	fi
+	ROOT_COUNT=0
+	while [[ ! ${ROOT_COUNT} == 15 ]]; do
+		sudo touch /System/test
+		if [[ -f /System/test ]]; then
+			break
+		else
+			ROOT_COUNT=$((${ROOT_COUNT}+3))
+			echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
+			if [[ "${ROOT_COUNT}" == 15 ]]; then
+				echo "\033[1;31mERROR : Failed to login.\033[0m (${ROOT_COUNT}/15)"
+				quitTool1
+			else
+				echo "\033[1;31mEnter your login password CORRECTLY!!!\033[0m (${ROOT_COUNT}/15)"
+			fi
+		fi
+	done
 	sudo rm /System/test
 }
 
