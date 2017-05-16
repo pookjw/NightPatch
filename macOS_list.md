@@ -16,6 +16,8 @@
 
 - macOS 10.12.5 Developer Beta 5 (16F71b)
 
+- macOS 10.12.6 Developer Beta 1 (16G8c)
+
 # Public Beta
 
 - macOS 10.12.5 Public Beta 1 (16F43c)
