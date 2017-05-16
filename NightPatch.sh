@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=98
+VERSION=99
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -366,12 +366,6 @@ function patchSystem(){
 		echo "\033[1;31mERROR : I can't find patch/${SYSTEM_BUILD}.patch file.\033[0m (seems like not supported macOS)"
 		quitTool1
 	fi
-	sudo touch /System/test
-	if [[ ! -f /System/test ]]; then
-		echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
-		quitTool1
-	fi
-	sudo rm /System/test
 	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "${SYSTEM_BUILD}" ]]; then
 			if [[ "${verbose}" == YES ]]; then
@@ -423,6 +417,15 @@ function codesignCB(){
 	else
 		sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness > /dev/null 2>&1
 	fi
+}
+
+function checkRoot(){
+	sudo touch /System/test
+	if [[ ! -f /System/test ]]; then
+		echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
+		quitTool1
+	fi
+	sudo rm /System/test
 }
 
 function setToolMode(){
@@ -511,6 +514,7 @@ function quitTool1(){
 
 showInitialMessage
 checkSystem
+checkRoot
 setToolMode "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}"
 echo
 setBuild
