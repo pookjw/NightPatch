@@ -1,4 +1,4 @@
-![Image](https://farm5.staticflickr.com/4190/34470110995_dd069e64ce_o.png)
+![Image](https://farm5.staticflickr.com/4165/33865755774_564890b48a_o.jpg)
 
 # NightPatch
 
