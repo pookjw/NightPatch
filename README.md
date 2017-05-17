@@ -20,6 +20,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.6 Developer Beta 1 (16G8c)
 
+- macOS 10.12.6 Public Beta 1 (Testing)
+
 [View more](macOS_list.md)
 
 ## How to patch
