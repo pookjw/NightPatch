@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=100
+VERSION=101
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -194,7 +194,7 @@ function revertUsingCombo(){
 		echo "Reverting from backup..."
 		revertSystem -rebootMessage -doNotPrint
 	else
-		echo "\033[1;31mERROR : Your macOS is not supported. (${SYSTEM_BUILD})\033[0m"
+		echo "\033[1;31mERROR : Your macOS is not supported.\033[0m (${SYSTEM_BUILD})"
 		quitTool1
 	fi
 }
