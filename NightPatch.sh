@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=107
+VERSION=108
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -469,10 +469,7 @@ function makePatch(){
 	echo "0900 0000 0d00 0000 0600 0000 0500 0000"
 	echo "0600 0000 0800 0000"
 	echo
-	echo "to"
-	echo
-	echo "0100 0000 0100 0000 0100 0000 0100 0000"
-	echo "0100 0000 0100 0000"
+	echo "See https://github.com/pookjw/NightPatch/wiki/Creating-patch-file"
 	showLines "*"
 	echo
 	echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
