@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=109
+VERSION=110
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -479,15 +479,19 @@ function makePatch(){
 	while(true); do
 		read -p "- " ANSWER
 		if [[ "${ANSWER}" == "done!" ]]; then
-			if [[ ! "${skipCheckSHA}" == YES ]]; then
-				if [[ ! "${BEFORE_CB_SHA}" == "$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')" ]]; then
-					break
+			if [[ -f ~/Desktop/CoreBrightness-patch ]]; then
+				if [[ ! "${skipCheckSHA}" == YES ]]; then
+					if [[ ! "${BEFORE_CB_SHA}" == "$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')" ]]; then
+						break
+					else
+						echo "Not modified."
+						echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+					fi
 				else
-					echo "Not modified."
-					echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+					break
 				fi
 			else
-				break
+				echo "\033[1;31mERROR : I can't find ~/Desktop/CoreBrightness-patch file. Something was wrong.\033[0m"
 			fi
 		elif [[ "${ANSWER}" == exit ]]; then
 			quitTool0
