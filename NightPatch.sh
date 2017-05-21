@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=108
+VERSION=109
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -506,8 +506,11 @@ function makePatch(){
 	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_original.txt"
 	patchSystem -make
 	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_patched.txt"
-	echo "Reverting system..."
-	revertSystem -doNotQuit -doNotPrint
+	if [[ "${verbose}" == YES ]]; then
+		revertSystem -doNotQuit
+	else
+		revertSystem -doNotQuit -doNotPrint
+	fi
 	echo "Location of new patch file : \033[1;36mpatch/${SYSTEM_BUILD}.patch\033[0m, \033[1;36msha/sha-${SYSTEM_BUILD}_original.txt\033[0m and \033[1;36msha/sha-${SYSTEM_BUILD}_patched.txt\033[0m."
 	echo "Done."
 	quitTool0 -doNotClean
