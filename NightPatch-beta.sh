@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=104
+VERSION=105
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -444,7 +444,7 @@ function makePatch(){
 	if [[ -d /Library/NightPatch ]]; then
 		echo "**WARNING : /Library/NightPatch (backup) will be removed."
 		read -s -n 1 -p "Press any key to continue..."
-		rm -rf /Library/NightPatch
+		sudo rm -rf /Library/NightPatch
 	fi
 	if [[ -f "patch/${SYSTEM_BUILD}" ]]; then
 		rm "patch/${SYSTEM_BUILD}"
