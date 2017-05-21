@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=103
+VERSION=104
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -441,6 +441,11 @@ function makePatch(){
 		echo "\033[1;31mERROR : I can't find sha folder.\033[0m"
 		quitTool1
 	fi
+	if [[ -d /Library/NightPatch ]]; then
+		echo "**WARNING : /Library/NightPatch (backup) will be removed."
+		read -s -n 1 -p "Press any key to continue..."
+		rm -rf /Library/NightPatch
+	fi
 	if [[ -f "patch/${SYSTEM_BUILD}" ]]; then
 		rm "patch/${SYSTEM_BUILD}"
 	fi
@@ -459,21 +464,26 @@ function makePatch(){
 	showLines "-"
 	echo "0900 0000 0d00 0000 0600 0000 0500 0000"
 	echo "0600 0000 0800 0000"
+	echo
+	echo "to"
+	echo
+	echo "0100 0000 0100 0000 0100 0000 0100 0000"
+	echo "0100 0000 0100 0000"
 	showLines "*"
 	echo
-	echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mpatched!\033[0m\"."
+	echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
 	if [[ ! "${skipCheckSHA}" == YES ]]; then
 		BEFORE_CB_SHA="$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')"
 	fi
 	while(true); do
 		read -p "- " ANSWER
-		if [[ "${ANSWER}" == "patched!" ]]; then
+		if [[ "${ANSWER}" == "done!" ]]; then
 			if [[ ! "${skipCheckSHA}" == YES ]]; then
 				if [[ ! "${BEFORE_CB_SHA}" == "$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')" ]]; then
 					break
 				else
 					echo "Not modified."
-					echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mpatched!\033[0m\"."
+					echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
 				fi
 			else
 				break
@@ -495,8 +505,9 @@ function makePatch(){
 	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_original.txt"
 	patchSystem -make
 	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_patched.txt"
+	echo "Reverting..."
 	revertSystem -doNotQuit -doNotPrint
-	echo "Location of new patch file : patch/${SYSTEM_BUILD}.patch, sha/sha-${SYSTEM_BUILD}_original.txt and sha/sha-${SYSTEM_BUILD}_patched.txt."
+	echo "Location of new patch file : \033[1;36mpatch/${SYSTEM_BUILD}.patch\033[0m, \033[1;36msha/sha-${SYSTEM_BUILD}_original.txt\033[0m and \033[1;36msha/sha-${SYSTEM_BUILD}_patched.txt\033[0m."
 	echo "Done."
 	quitTool0 -doNotClean
 }
