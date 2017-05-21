@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=110
+VERSION=111
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -492,6 +492,7 @@ function makePatch(){
 				fi
 			else
 				echo "\033[1;31mERROR : I can't find ~/Desktop/CoreBrightness-patch file. Something was wrong.\033[0m"
+				quitTool1
 			fi
 		elif [[ "${ANSWER}" == exit ]]; then
 			quitTool0
