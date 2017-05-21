@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=102
+VERSION=103
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -498,7 +498,7 @@ function makePatch(){
 	revertSystem -doNotQuit -doNotPrint
 	echo "Location of new patch file : patch/${SYSTEM_BUILD}.patch, sha/sha-${SYSTEM_BUILD}_original.txt and sha/sha-${SYSTEM_BUILD}_patched.txt."
 	echo "Done."
-	quitTool0
+	quitTool0 -doNotClean
 }
 
 function checkRoot(){
@@ -599,12 +599,16 @@ function showLines(){
 }
 
 function quitTool0(){
-	removeTmp
+	if [[ ! "${1}" == "-doNotClean" ]]; then
+		removeTmp
+	fi
 	exit 0
 }
 
 function quitTool1(){
-	removeTmp
+	if [[ ! "${1}" == "-doNotClean" ]]; then
+		removeTmp
+	fi
 	exit 1
 }
 
