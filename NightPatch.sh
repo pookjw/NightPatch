@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=101
+VERSION=107
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -12,6 +12,7 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "-skipCheckSHA : Skip checking SHA1 verification."
 	echo "-customBuild : Set fake system build."
 	echo "-verbose : verbose mode."
+	echo "-make : Create patch file."
 	echo
 	echo "example)"
 	echo "$ ./NightPatch.sh -revert combo -customBuild"
@@ -328,9 +329,17 @@ function checkSHA(){
 
 function showCommandGuide(){
 	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
-		echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+		if [[ "${BUILD}" == beta ]]; then
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch-beta.sh ${1}"
+		else
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+		fi
 	else
-		echo "\033[1;31m$\033[0m ./NightPatch.sh ${1}"
+		if [[ "${BUILD}" == beta ]]; then
+			echo "\033[1;31m$\033[0m ./NightPatch-beta.sh ${1}"
+		else
+			echo "\033[1;31m$\033[0m ./NightPatch.sh ${1}"
+		fi
 	fi
 }
 
@@ -387,7 +396,7 @@ function patchSystem(){
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
 	codesignCB
-	if [[ ! "${skipCheckSHA}" == YES ]]; then
+	if [[ ! "${skipCheckSHA}" == YES && ! "${1}" == "-make" ]]; then
 		checkSHA original
 	fi
 	sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch "patch/${SYSTEM_BUILD}.patch"
@@ -398,12 +407,14 @@ function patchSystem(){
 	if [[ "${verbose}" == YES ]]; then
 		echo
 	fi
-	if [[ ! "${skipCheckSHA}" == YES ]]; then
+	if [[ ! "${skipCheckSHA}" == YES && ! "${1}" == "-make" ]]; then
 		checkSHA patched
 	fi
-	echo "Backup was saved on \033[1;36m/Library/NightPatch\033[0m."
-	echo "Patch was done. Please reboot your Mac to complete."
-	quitTool0
+	if [[ ! "${1}" == "-make" ]]; then
+		echo "Backup was saved on \033[1;36m/Library/NightPatch\033[0m."
+		echo "Patch was done. Please reboot your Mac to complete."
+		quitTool0
+	fi
 }
 
 function codesignCB(){
@@ -412,6 +423,97 @@ function codesignCB(){
 	else
 		sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness > /dev/null 2>&1
 	fi
+	if [[ "${1}" == "-make" ]]; then
+		if [[ "${verbose}" == YES ]]; then
+			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
+		else
+			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch > /dev/null 2>&1
+		fi
+	fi
+}
+
+function makePatch(){
+	if [[ ! -d patch ]]; then
+		echo "\033[1;31mERROR : I can't find patch folder.\033[0m"
+		quitTool1
+	fi
+	if [[ ! -d sha ]]; then
+		echo "\033[1;31mERROR : I can't find sha folder.\033[0m"
+		quitTool1
+	fi
+	echo "**WARNING : If you already patched your macOS, don't do this!"
+	read -s -n 1 -p "Press any key to continue..."
+	echo
+	if [[ -d /Library/NightPatch ]]; then
+		echo "**WARNING : /Library/NightPatch (backup) will be removed."
+		read -s -n 1 -p "Press any key to continue..."
+		echo
+		sudo rm -rf /Library/NightPatch
+	fi
+	if [[ -f "patch/${SYSTEM_BUILD}" ]]; then
+		rm "patch/${SYSTEM_BUILD}"
+	fi
+	if [[ -f "sha/sha-${SYSTEM_BUILD}_original.txt" ]]; then
+		rm "sha/sha-${SYSTEM_BUILD}_original.txt"
+	fi
+	if [[ -f "sha/sha-${SYSTEM_BUILD}_patched.txt" ]]; then
+		rm "sha/sha-${SYSTEM_BUILD}_patched.txt"
+	fi
+	if [[ -f ~/Desktop/CoreBrightness-patch ]]; then
+		rm ~/Desktop/CoreBrightness-patch
+	fi
+	cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness ~/Desktop/CoreBrightness-patch
+	showLines "*"
+	echo "NOTE"
+	showLines "-"
+	echo "0900 0000 0d00 0000 0600 0000 0500 0000"
+	echo "0600 0000 0800 0000"
+	echo
+	echo "to"
+	echo
+	echo "0100 0000 0100 0000 0100 0000 0100 0000"
+	echo "0100 0000 0100 0000"
+	showLines "*"
+	echo
+	echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+	if [[ ! "${skipCheckSHA}" == YES ]]; then
+		BEFORE_CB_SHA="$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')"
+	fi
+	while(true); do
+		read -p "- " ANSWER
+		if [[ "${ANSWER}" == "done!" ]]; then
+			if [[ ! "${skipCheckSHA}" == YES ]]; then
+				if [[ ! "${BEFORE_CB_SHA}" == "$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')" ]]; then
+					break
+				else
+					echo "Not modified."
+					echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+				fi
+			else
+				break
+			fi
+		elif [[ "${ANSWER}" == exit ]]; then
+			quitTool0
+		fi
+	done
+	echo
+	sudo mv ~/Desktop/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A
+	codesignCB -make
+	bsdiff /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch "patch/${SYSTEM_BUILD}.patch"
+	if [[ ! -f "patch/${SYSTEM_BUILD}.patch" ]]; then
+		echo "\033[1;31mERROR : I can't find patch file. Something was wrong.\033[0m"
+		quitTool1
+	fi
+	sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
+	codesignCB
+	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_original.txt"
+	patchSystem -make
+	echo "$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')" >> "sha/sha-${SYSTEM_BUILD}_patched.txt"
+	echo "Reverting system..."
+	revertSystem -doNotQuit -doNotPrint
+	echo "Location of new patch file : \033[1;36mpatch/${SYSTEM_BUILD}.patch\033[0m, \033[1;36msha/sha-${SYSTEM_BUILD}_original.txt\033[0m and \033[1;36msha/sha-${SYSTEM_BUILD}_patched.txt\033[0m."
+	echo "Done."
+	quitTool0 -doNotClean
 }
 
 function checkRoot(){
@@ -461,6 +563,10 @@ function setToolMode(){
 			mode=revert
 		fi
 	fi
+	if [[ "${1}" == "-make" || "${2}" == "-make" || "${3}" == "-make" || "${4}" == "-make" || "${5}" == "-make" || "${6}" == "-make" || "${7}" == "-make" || "${8}" == "-make" || "${9}" == "-make" ]]; then
+		echo "mode=\033[1;36mmake\033[0m"
+		mode=make
+	fi
 	if [[ "${mode}" == patch ]]; then
 		echo "mode=\033[1;36mpatch\033[0m"
 	fi
@@ -491,6 +597,7 @@ function showInitialMessage(){
 	if [[ "${BUILD}" == beta ]]; then
 		echo "**WARNING : This is beta version. I don't guarantee of any problems."
 		read -s -n 1 -p "Press any key to continue..."
+		echo
 	fi
 }
 
@@ -507,12 +614,16 @@ function showLines(){
 }
 
 function quitTool0(){
-	removeTmp
+	if [[ ! "${1}" == "-doNotClean" ]]; then
+		removeTmp
+	fi
 	exit 0
 }
 
 function quitTool1(){
-	removeTmp
+	if [[ ! "${1}" == "-doNotClean" ]]; then
+		removeTmp
+	fi
 	exit 1
 }
 
@@ -535,6 +646,8 @@ elif [[ "${mode}" == revertUsingCombo ]]; then
 	revertUsingCombo
 elif [[ "${mode}" == revert ]]; then
 	revertSystem -rebootMessage
+elif [[ "${mode}" == make ]]; then
+	makePatch
 elif [[ "${mode}" == patch ]]; then
 	patchSystem
 fi
