@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=112
+VERSION=113
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -85,7 +85,6 @@ function revertSystem(){
 			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
 			echo
 			showCommandGuide "-revert combo"
-			echo
 			showLines "*"
 		else
 			echo "\033[1;31mERROR : No backup.\033[0m"
@@ -107,7 +106,6 @@ function revertUsingCombo(){
 			echo "\033[1;31mERROR : Requires lzma.\033[0m"
 			echo "1. Install Homebrew. https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
-			echo
 			showLines "*"
 			quitTool1
 		fi
@@ -309,7 +307,6 @@ function checkSHA(){
 			echo "If you want to patch your macOS by force, Try this command but this is not recommended. \033[1;31mDo not type $\033[0m."
 			echo
 			showCommandGuide "-skipCheckSHA"
-			echo
 			showLines "*"
 			revertSystem -doNotQuit
 			quitTool1
@@ -320,7 +317,6 @@ function checkSHA(){
 		echo "If you want to patch your macOS by force, Try this command but this is not recommended. \033[1;31mDo not type $.\033[0m"
 		echo
 		showCommandGuide "-skipCheckSHA"
-		echo
 		showLines "*"
 		revertSystem -doNotQuit
 		quitTool1
