@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=111
+VERSION=112
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -330,7 +330,7 @@ function checkSHA(){
 function showCommandGuide(){
 	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
 		if [[ "${BUILD}" == beta ]]; then
-			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch-beta.sh ${1}"
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; ./NightPatch-beta.sh ${1}"
 		else
 			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
 		fi
