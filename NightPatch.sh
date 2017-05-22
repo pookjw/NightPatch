@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=113
+VERSION=114
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -9,10 +9,10 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "./NightPatch.sh [option]"
 	echo "-revert : Revert using backup."
 	echo "-revert combo : Revert using macOS Combo uptate. (works without backup)"
+	echo "-make : Create patch file."
 	echo "-skipCheckSHA : Skip checking SHA1 verification."
 	echo "-customBuild : Set fake system build."
 	echo "-verbose : verbose mode."
-	echo "-make : Create patch file."
 	echo
 	echo "example)"
 	echo "$ ./NightPatch.sh -revert combo -customBuild"
@@ -440,21 +440,6 @@ function makePatch(){
 	echo "**WARNING : If you already patched your macOS, don't do this!"
 	read -s -n 1 -p "Press any key to continue..."
 	echo
-	if [[ -d /Library/NightPatch ]]; then
-		echo "**WARNING : /Library/NightPatch (backup) will be removed."
-		read -s -n 1 -p "Press any key to continue..."
-		echo
-		sudo rm -rf /Library/NightPatch
-	fi
-	if [[ -f "patch/${SYSTEM_BUILD}" ]]; then
-		rm "patch/${SYSTEM_BUILD}"
-	fi
-	if [[ -f "sha/sha-${SYSTEM_BUILD}_original.txt" ]]; then
-		rm "sha/sha-${SYSTEM_BUILD}_original.txt"
-	fi
-	if [[ -f "sha/sha-${SYSTEM_BUILD}_patched.txt" ]]; then
-		rm "sha/sha-${SYSTEM_BUILD}_patched.txt"
-	fi
 	if [[ -f ~/Desktop/CoreBrightness-patch ]]; then
 		rm ~/Desktop/CoreBrightness-patch
 	fi
@@ -495,6 +480,21 @@ function makePatch(){
 		fi
 	done
 	echo
+	if [[ -f "patch/${SYSTEM_BUILD}.patch" ]]; then
+		rm "patch/${SYSTEM_BUILD}.patch"
+	fi
+	if [[ -f "sha/sha-${SYSTEM_BUILD}_original.txt" ]]; then
+		rm "sha/sha-${SYSTEM_BUILD}_original.txt"
+	fi
+	if [[ -f "sha/sha-${SYSTEM_BUILD}_patched.txt" ]]; then
+		rm "sha/sha-${SYSTEM_BUILD}_patched.txt"
+	fi
+	if [[ -d /Library/NightPatch ]]; then
+		echo "**WARNING : /Library/NightPatch (backup) will be removed."
+		read -s -n 1 -p "Press any key to continue..."
+		echo
+		sudo rm -rf /Library/NightPatch
+	fi
 	sudo mv ~/Desktop/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A
 	codesignCB -make
 	bsdiff /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch "patch/${SYSTEM_BUILD}.patch"
@@ -538,7 +538,30 @@ function checkRoot(){
 }
 
 function setToolMode(){
-	mode=patch
+	if [[ "${1}" == "-patch" || "${2}" == "-patch" || "${3}" == "-patch" || "${4}" == "-patch" || "${5}" == "-patch" || "${6}" == "-patch" || "${7}" == "-patch" || "${8}" == "-patch" || "${9}" == "-patch" ]]; then
+		mode=patch
+	fi
+	if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" || "${4}" == "-revert" || "${5}" == "-revert" || "${6}" == "-revert" || "${7}" == "-revert" || "${8}" == "-revert" || "${9}" == "-revert" ]]; then
+		if [[ "${1}" == "combo" || "${2}" == "combo" || "${3}" == "combo" || "${4}" == "combo" || "${5}" == "combo" || "${6}" == "combo" || "${7}" == "combo" || "${8}" == "combo" || "${9}" == "combo" ]]; then
+			mode=revertUsingCombo
+		else
+			mode=revert
+		fi
+	fi
+	if [[ "${1}" == "-make" || "${2}" == "-make" || "${3}" == "-make" || "${4}" == "-make" || "${5}" == "-make" || "${6}" == "-make" || "${7}" == "-make" || "${8}" == "-make" || "${9}" == "-make" ]]; then
+		mode=make
+	fi
+	if [[ "${1}" == "-moveOldBackup" || "${2}" == "-moveOldBackup" || "${3}" == "-moveOldBackup" || "${4}" == "-moveOldBackup" || "${5}" == "-moveOldBackup" || "${6}" == "-moveOldBackup" || "${7}" == "-moveOldBackup" || "${8}" == "-moveOldBackup" || "${9}" == "-moveOldBackup" ]]; then
+		mode=moveOldBackup
+	fi
+	if [[ -z "${mode}" ]]; then
+		echo "mode=\033[1;36mpatch\033[0m"
+		mode=patch
+	elif [[ "${mode}" == revertUsingCombo ]]; then
+		echo "mode=\033[1;36mrevert \033[1;35m(combo)\033[0m"
+	else
+		echo "mode=\033[1;36m${mode}\033[0m"
+	fi
 	if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" || "${4}" == "-skipCheckSHA" || "${5}" == "-skipCheckSHA" || "${6}" == "-skipCheckSHA" || "${7}" == "-skipCheckSHA" || "${8}" == "-skipCheckSHA" || "${9}" == "-skipCheckSHA" ]]; then
 		echo "skipCheckSHA=\033[1;36mYES\033[0m"
 		skipCheckSHA=YES
@@ -550,26 +573,6 @@ function setToolMode(){
 	if [[ "${1}" == "-verbose" || "${2}" == "-verbose" || "${3}" == "-verbose" || "${4}" == "-verbose" || "${5}" == "-verbose" || "${6}" == "-verbose" || "${7}" == "-verbose" || "${8}" == "-verbose" || "${9}" == "-verbose" ]]; then
 		echo "verbose=\033[1;36mYES\033[0m"
 		verbose=YES
-	fi
-	if [[ "${1}" == "-moveOldBackup" || "${2}" == "-moveOldBackup" || "${3}" == "-moveOldBackup" || "${4}" == "-moveOldBackup" || "${5}" == "-moveOldBackup" || "${6}" == "-moveOldBackup" || "${7}" == "-moveOldBackup" || "${8}" == "-moveOldBackup" || "${9}" == "-moveOldBackup" ]]; then
-		echo "mode=\033[1;36mmoveOldBackup\033[0m"
-		mode=moveOldBackup
-	fi
-	if [[ "${1}" == "-revert" || "${2}" == "-revert" || "${3}" == "-revert" || "${4}" == "-revert" || "${5}" == "-revert" || "${6}" == "-revert" || "${7}" == "-revert" || "${8}" == "-revert" || "${9}" == "-revert" ]]; then
-		if [[ "${1}" == "combo" || "${2}" == "combo" || "${3}" == "combo" || "${4}" == "combo" || "${5}" == "combo" || "${6}" == "combo" || "${7}" == "combo" || "${8}" == "combo" || "${9}" == "combo" ]]; then
-			echo "mode=\033[1;36mrevert \033[1;35m(combo)\033[0m"
-			mode=revertUsingCombo
-		else
-			echo "mode=\033[1;36mrevert\033[0m"
-			mode=revert
-		fi
-	fi
-	if [[ "${1}" == "-make" || "${2}" == "-make" || "${3}" == "-make" || "${4}" == "-make" || "${5}" == "-make" || "${6}" == "-make" || "${7}" == "-make" || "${8}" == "-make" || "${9}" == "-make" ]]; then
-		echo "mode=\033[1;36mmake\033[0m"
-		mode=make
-	fi
-	if [[ "${mode}" == patch ]]; then
-		echo "mode=\033[1;36mpatch\033[0m"
 	fi
 }
 
