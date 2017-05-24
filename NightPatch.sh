@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=116
+VERSION=117
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -12,6 +12,7 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "\033[1;36m-revert combo\033[0m : Revert using macOS Combo uptate. (works without backup)"
 	echo "\033[1;36m-make\033[0m : Create patch file."
 	echo "\033[1;35m-skipCheckSHA\033[0m : Skip checking SHA1 verification."
+	echo "\033[1;35m-skipCheckSystem\033[0m : Skip checking system (macOS version, SIP)."
 	echo "\033[1;35m-customBuild\033[0m : Set fake system build."
 	echo "\033[1;35m-verbose\033[0m : verbose mode."
 	echo
@@ -353,7 +354,8 @@ function checkSystem(){
 		echo "\033[1;31mERROR : Requires macOS 10.12.4 or higher.\033[0m (Detected version : $(sw_vers -productVersion))"
 		quitTool1
 	fi
-	if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
+	#if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
+	if [[ "$(csrutil status | grep "System Integrity Protection status: disabled." | wc -l)" == 0 && "$(csrutil status | grep "Filesystem Protections: disabled" | wc -l)" == 0 ]]; then
 		echo "\033[1;31mERROR : Turn off System Integrity Protection before doing this.\033[0m"
 		echo "See http://apple.stackexchange.com/a/209530"
 		quitTool1
@@ -573,6 +575,10 @@ function setToolMode(){
 		echo "skipCheckSHA=\033[1;36mYES\033[0m"
 		skipCheckSHA=YES
 	fi
+	if [[ "${1}" == "-skipCheckSystem" || "${2}" == "-skipCheckSystem" || "${3}" == "-skipCheckSystem" || "${4}" == "-skipCheckSystem" || "${5}" == "-skipCheckSystem" || "${6}" == "-skipCheckSystem" || "${7}" == "-skipCheckSystem" || "${8}" == "-skipCheckSystem" || "${9}" == "-skipCheckSystem" ]]; then
+		echo "skipCheckSystem=\033[1;36mYES\033[0m"
+		skipCheckSystem=YES
+	fi
 	if [[ "${1}" == "-customBuild" || "${2}" == "-customBuild" || "${3}" == "-customBuild" || "${4}" == "-customBuild" || "${5}" == "-customBuild" || "${6}" == "-customBuild" || "${7}" == "-customBuild" || "${8}" == "-customBuild" || "${9}" == "-customBuild" ]]; then
 		echo "customBuild=\033[1;36mYES\033[0m"
 		customBuild=YES
@@ -645,9 +651,11 @@ function quitTool1(){
 #########################################################################
 
 showInitialMessage
-checkSystem
-checkRoot
 setToolMode "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}"
+if [[ ! "${skipCheckSystem}" == YES ]]; then
+	checkSystem
+fi
+checkRoot
 echo
 setBuild
 if [[ "${verbose}" == YES ]]; then
