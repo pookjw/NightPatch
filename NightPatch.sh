@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=115
+VERSION=116
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -355,6 +355,7 @@ function checkSystem(){
 	fi
 	if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
 		echo "\033[1;31mERROR : Turn off System Integrity Protection before doing this.\033[0m"
+		echo "See http://apple.stackexchange.com/a/209530"
 		quitTool1
 	fi
 }
