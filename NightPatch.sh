@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=119
+VERSION=120
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -15,9 +15,9 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "\033[1;35m-verbose\033[0m : verbose mode."
 	echo
 	echo "example)"
+	echo "$ ./NightPatch.sh \033[1;36m-patch \033[1;35m-skipCheckSHA -verbose\033[0m"
 	echo "$ ./NightPatch.sh \033[1;36m-revert combo\033[0m"
 	echo "$ ./NightPatch.sh \033[1;36m-make \033[1;35m-verbose\033[0m"
-	echo "$ ./NightPatch.sh \033[1;35m-skipCheckSHA -verbose\033[0m"
 	exit 0
 fi
 
