@@ -1,22 +1,24 @@
 #!/bin/sh
-VERSION=114
+VERSION=115
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "./NightPatch.sh : Patch macOS."
 	echo "I introduce a few NightPatch options."
 	echo
-	echo "./NightPatch.sh [option]"
-	echo "-revert : Revert using backup."
-	echo "-revert combo : Revert using macOS Combo uptate. (works without backup)"
-	echo "-make : Create patch file."
-	echo "-skipCheckSHA : Skip checking SHA1 verification."
-	echo "-customBuild : Set fake system build."
-	echo "-verbose : verbose mode."
+	echo "./NightPatch.sh \033[1;35m[\033[1;36moption\033[1;35m]\033[0m"
+	echo "\033[1;36m-help\033[0m : Show this message."
+	echo "\033[1;36m-revert\033[0m : Revert using backup."
+	echo "\033[1;36m-revert combo\033[0m : Revert using macOS Combo uptate. (works without backup)"
+	echo "\033[1;36m-make\033[0m : Create patch file."
+	echo "\033[1;35m-skipCheckSHA\033[0m : Skip checking SHA1 verification."
+	echo "\033[1;35m-customBuild\033[0m : Set fake system build."
+	echo "\033[1;35m-verbose\033[0m : verbose mode."
 	echo
 	echo "example)"
-	echo "$ ./NightPatch.sh -revert combo -customBuild"
-	echo "$ ./NightPatch.sh -skipCheckSHA -verbose"
+	echo "$ ./NightPatch.sh \033[1;36m-revert combo\033[0m"
+	echo "$ ./NightPatch.sh \033[1;36m-make \033[1;35m-verbose\033[0m"
+	echo "$ ./NightPatch.sh \033[1;35m-skipCheckSHA -verbose\033[0m"
 	exit 0
 fi
 
@@ -454,6 +456,7 @@ function makePatch(){
 	showLines "*"
 	echo
 	echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+	echo "Enter \033[1;36mexit\033[0m to discard."
 	if [[ ! "${skipCheckSHA}" == YES ]]; then
 		BEFORE_CB_SHA="$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')"
 	fi
@@ -475,6 +478,9 @@ function makePatch(){
 				echo "\033[1;31mERROR : I can't find ~/Desktop/CoreBrightness-patch file. Something was wrong.\033[0m"
 				quitTool1
 			fi
+		elif [[ "${ANSWER}" == help ]]; then
+			echo "Please modify ~/Desktop/CoreBrightness-patch using hex editor. If you done, enter \"\033[1;36mdone!\033[0m\"."
+			echo "Enter \033[1;36mexit\033[0m to discard."
 		elif [[ "${ANSWER}" == exit ]]; then
 			quitTool0
 		fi
@@ -579,10 +585,14 @@ function setToolMode(){
 function setBuild(){
 	if [[ "${customBuild}" == YES ]]; then
 		echo "Enter custom system build. (ex: 16E195)"
+		echo "Enter \033[1;36mexit\033[0m to discard."
 		while(true); do
 			read -p "- " SYSTEM_BUILD
 			if [[ "${SYSTEM_BUILD}" == exit ]]; then
 				quitTool0
+			elif [[ "${SYSTEM_BUILD}" == help ]]; then
+				echo "Enter custom system build. (ex: 16E195)"
+				echo "Enter \033[1;36mexit\033[0m to discard."
 			elif [[ ! -z "${SYSTEM_BUILD}" ]]; then
 				echo "SYSTEM_BUILD=\033[1;36m${SYSTEM_BUILD}\033[0m"
 				break
