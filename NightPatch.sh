@@ -1,15 +1,13 @@
 #!/bin/sh
-VERSION=118
+VERSION=119
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
-	echo "./NightPatch.sh : Patch macOS."
-	echo "I introduce a few NightPatch options."
-	echo
 	echo "./NightPatch.sh \033[1;35m[\033[1;36moption\033[1;35m]\033[0m"
 	echo "\033[1;36m-help\033[0m : Show this message."
-	echo "\033[1;36m-revert\033[0m : Revert using backup."
-	echo "\033[1;36m-revert combo\033[0m : Revert using macOS Combo uptate. (works without backup)"
+	echo "\033[1;36m-patch\033[0m : Enable Night Shift on your macOS."
+	echo "\033[1;36m-revert\033[0m : Revert macOS using backup."
+	echo "\033[1;36m-revert combo\033[0m : Revert macOS using macOS Combo uptate. (works without backup)"
 	echo "\033[1;36m-make\033[0m : Create patch file."
 	echo "\033[1;35m-skipCheckSHA\033[0m : Skip checking SHA1 verification."
 	echo "\033[1;35m-skipCheckSystem\033[0m : Skip checking system (macOS version, SIP)."
