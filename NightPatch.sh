@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=120
+VERSION=121
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -7,7 +7,7 @@ if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
 	echo "\033[1;36m-help\033[0m : Show this message."
 	echo "\033[1;36m-patch\033[0m : Enable Night Shift on your macOS."
 	echo "\033[1;36m-revert\033[0m : Revert macOS using backup."
-	echo "\033[1;36m-revert combo\033[0m : Revert macOS using macOS Combo uptate. (works without backup)"
+	echo "\033[1;36m-revert combo\033[0m : Revert macOS using macOS Combo uptate. (Works without backup. Not for macOS Beta.)"
 	echo "\033[1;36m-make\033[0m : Create patch file."
 	echo "\033[1;35m-skipCheckSHA\033[0m : Skip checking SHA1 verification."
 	echo "\033[1;35m-skipCheckSystem\033[0m : Skip checking system (macOS version, SIP)."
@@ -570,19 +570,19 @@ function setToolMode(){
 		echo "mode=\033[1;36m${mode}\033[0m"
 	fi
 	if [[ "${1}" == "-skipCheckSHA" || "${2}" == "-skipCheckSHA" || "${3}" == "-skipCheckSHA" || "${4}" == "-skipCheckSHA" || "${5}" == "-skipCheckSHA" || "${6}" == "-skipCheckSHA" || "${7}" == "-skipCheckSHA" || "${8}" == "-skipCheckSHA" || "${9}" == "-skipCheckSHA" ]]; then
-		echo "skipCheckSHA=\033[1;36mYES\033[0m"
+		echo "skipCheckSHA=\033[1;35mYES\033[0m"
 		skipCheckSHA=YES
 	fi
 	if [[ "${1}" == "-skipCheckSystem" || "${2}" == "-skipCheckSystem" || "${3}" == "-skipCheckSystem" || "${4}" == "-skipCheckSystem" || "${5}" == "-skipCheckSystem" || "${6}" == "-skipCheckSystem" || "${7}" == "-skipCheckSystem" || "${8}" == "-skipCheckSystem" || "${9}" == "-skipCheckSystem" ]]; then
-		echo "skipCheckSystem=\033[1;36mYES\033[0m"
+		echo "skipCheckSystem=\033[1;35mYES\033[0m"
 		skipCheckSystem=YES
 	fi
 	if [[ "${1}" == "-customBuild" || "${2}" == "-customBuild" || "${3}" == "-customBuild" || "${4}" == "-customBuild" || "${5}" == "-customBuild" || "${6}" == "-customBuild" || "${7}" == "-customBuild" || "${8}" == "-customBuild" || "${9}" == "-customBuild" ]]; then
-		echo "customBuild=\033[1;36mYES\033[0m"
+		echo "customBuild=\033[1;35mYES\033[0m"
 		customBuild=YES
 	fi
 	if [[ "${1}" == "-verbose" || "${2}" == "-verbose" || "${3}" == "-verbose" || "${4}" == "-verbose" || "${5}" == "-verbose" || "${6}" == "-verbose" || "${7}" == "-verbose" || "${8}" == "-verbose" || "${9}" == "-verbose" ]]; then
-		echo "verbose=\033[1;36mYES\033[0m"
+		echo "verbose=\033[1;35mYES\033[0m"
 		verbose=YES
 	fi
 }
