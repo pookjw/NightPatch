@@ -18,7 +18,7 @@
 
 - macOS 10.12.6 Developer Beta 1 (16G8c)
 
-- macOS 10.12.6 Developer Beta 2 (**Coming Soon**)
+- macOS 10.12.6 Developer Beta 2 (16G12b)
 
 # Public Beta
 
