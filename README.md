@@ -18,9 +18,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.5 (16F73)
 
-- macOS 10.12.6 Developer Beta 1 (16G8c)
-
-- macOS 10.12.6 Public Beta 1 (16G8c)
+- macOS 10.12.6 Developer Beta 2 (**Coming Soon**)
 
 [View more](macOS_list.md)
 
