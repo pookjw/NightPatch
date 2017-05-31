@@ -33,3 +33,5 @@
 - macOS 10.12.5 Public Beta 5 (16F71b)
 
 - macOS 10.12.6 Public Beta 1 (16G8c)
+
+- macOS 10.12.6 Public Beta 2 (16G12b)

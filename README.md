@@ -20,7 +20,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.6 Developer Beta 2 (16G12b)
 
-- macOS 10.12.6 Public Beta 2 (**Testing**)
+- macOS 10.12.6 Public Beta 2 (16G12b)
 
 [View more](macOS_list.md)
 
