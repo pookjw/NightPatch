@@ -22,7 +22,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.6 Public Beta 2 (16G12b)
 
-About macOS High Sierra 10.13 : Not yet. I will make patch when it possible.
+- macOS 10.13 Developer Preview 1 (17A264c)
 
 [View more](macOS_list.md)
 
