@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=121
+VERSION=122
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -65,7 +65,6 @@ function revertSystem(){
 			fi
 			sudo cp /Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo cp -r /Library/NightPatch/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
-			chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			codesignCB
 			if [[ "${1}" == "-rebootMessage" || "${2}" == "-rebootMessage" || "${3}" == "-rebootMessage" ]]; then
 				echo "Done. Please reboot your Mac to complete."
@@ -401,7 +400,6 @@ function patchSystem(){
 	sudo bspatch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch "patch/${SYSTEM_BUILD}.patch"
 	sudo rm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 	sudo mv /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
-	sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 	codesignCB
 	if [[ "${verbose}" == YES ]]; then
 		echo
@@ -422,12 +420,14 @@ function codesignCB(){
 	else
 		sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness > /dev/null 2>&1
 	fi
+	sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 	if [[ "${1}" == "-make" ]]; then
 		if [[ "${verbose}" == YES ]]; then
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
 		else
 			sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch > /dev/null 2>&1
 		fi
+		sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness-patch
 	fi
 }
 
