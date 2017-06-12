@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=122
+VERSION=123
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -97,7 +97,7 @@ function revertSystem(){
 
 function revertUsingCombo(){
 	if [[ -f "combo/url-${SYSTEM_BUILD}.txt" ]]; then
-		if [[ ! -d "$(xcode-select -p)" ]]; then
+		if [[ ! -d "$("xcode-select" -p)" ]]; then
 			echo "\033[1;31mERROR : Requires Command Line Tool.\033[0m Enter 'xcode-select --install' command to install this."
 			quitTool1
 		fi
@@ -589,14 +589,14 @@ function setToolMode(){
 
 function setBuild(){
 	if [[ "${customBuild}" == YES ]]; then
-		echo "Enter custom system build. (ex: 16E195)"
+		echo "Enter custom system build. (example: 16F73)"
 		echo "Enter \033[1;36mexit\033[0m to discard."
 		while(true); do
 			read -p "- " SYSTEM_BUILD
 			if [[ "${SYSTEM_BUILD}" == exit ]]; then
 				quitTool0
 			elif [[ "${SYSTEM_BUILD}" == help ]]; then
-				echo "Enter custom system build. (ex: 16E195)"
+				echo "Enter custom system build. (example: 16E195)"
 				echo "Enter \033[1;36mexit\033[0m to discard."
 			elif [[ ! -z "${SYSTEM_BUILD}" ]]; then
 				echo "SYSTEM_BUILD=\033[1;36m${SYSTEM_BUILD}\033[0m"
