@@ -16,6 +16,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.13 Developer Preview 1 (17A264c)
 
+- macOS 10.12.6 Developer Beta 3 (**Coming Soon**)
+
 - macOS 10.12.6 Developer Beta 2 (16G12b)
 
 - macOS 10.12.6 Public Beta 2 (16G12b)
