@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=123
+VERSION=124
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -463,7 +463,7 @@ function makePatch(){
 	fi
 	while(true); do
 		read -p "- " ANSWER
-		if [[ "${ANSWER}" == "done!" ]]; then
+		if [[ "${ANSWER}" == "done!" || "${ANSWER}" == "done" ]]; then
 			if [[ -f ~/Desktop/CoreBrightness-patch ]]; then
 				if [[ ! "${skipCheckSHA}" == YES ]]; then
 					if [[ ! "${BEFORE_CB_SHA}" == "$(shasum ~/Desktop/CoreBrightness-patch | awk '{ print $1 }')" ]]; then
