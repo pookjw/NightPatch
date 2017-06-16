@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=124
+VERSION=125
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -27,9 +27,6 @@ function removeTmp(){
 	fi
 	if [[ -d /tmp/NightPatch-master ]]; then
 		rm -rf /tmp/NightPatch-master
-	fi
-	if [[ -f /System/test ]]; then
-		sudo rm /System/test
 	fi
 	cleanComboProcess
 }
@@ -526,22 +523,40 @@ function makePatch(){
 
 function checkRoot(){
 	ROOT_COUNT=0
-	while [[ ! ${ROOT_COUNT} == 15 ]]; do
-		sudo touch /System/test
-		if [[ -f /System/test ]]; then
-			break
-		else
-			ROOT_COUNT=$((${ROOT_COUNT}+3))
-			echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
-			if [[ "${ROOT_COUNT}" == 15 ]]; then
-				echo "\033[1;31mERROR : Failed to login.\033[0m (${ROOT_COUNT}/15)"
-				quitTool1
+	if [[ ! -f /System/test ]]; then
+		while [[ ! ${ROOT_COUNT} == 15 ]]; do
+			sudo touch /System/test
+			if [[ -f /System/test ]]; then
+				sudo rm /System/test
+				break
 			else
-				echo "\033[1;31mEnter your login password CORRECTLY!!!\033[0m (${ROOT_COUNT}/15)"
+				ROOT_COUNT=$((${ROOT_COUNT}+3))
+				echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
+				if [[ "${ROOT_COUNT}" == 15 ]]; then
+					echo "\033[1;31mERROR : Failed to login.\033[0m (${ROOT_COUNT}/15)"
+					quitTool1
+				else
+					echo "\033[1;31mEnter your login password CORRECTLY!!!\033[0m (${ROOT_COUNT}/15)"
+				fi
 			fi
-		fi
-	done
-	sudo rm /System/test
+		done
+	else
+		while [[ ! ${ROOT_COUNT} == 15 ]]; do
+			sudo rm /System/test
+			if [[ ! -f /System/test ]]; then
+				break
+			else
+				ROOT_COUNT=$((${ROOT_COUNT}+3))
+				echo "\033[1;31mERROR : Can't write a file to root.\033[0m"
+				if [[ "${ROOT_COUNT}" == 15 ]]; then
+					echo "\033[1;31mERROR : Failed to login.\033[0m (${ROOT_COUNT}/15)"
+					quitTool1
+				else
+					echo "\033[1;31mEnter your login password CORRECTLY!!!\033[0m (${ROOT_COUNT}/15)"
+				fi
+			fi
+		done
+	fi
 }
 
 function setToolMode(){
