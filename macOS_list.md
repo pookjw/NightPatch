@@ -28,6 +28,8 @@
 
 # Public Beta
 
+- macOS 10.12.6 Public Beta 4 (16G18a)
+
 - macOS 10.12.6 Public Beta 3 (16G16b)
 
 - macOS 10.12.6 Public Beta 2 (16G12b)
