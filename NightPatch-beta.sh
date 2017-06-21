@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=126
+VERSION=127
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -98,8 +98,9 @@ function revertUsingCombo(){
 			echo "\033[1;31mERROR : I can't find combo/type-${SYSTEM_BUILD}.txt.\033[0m"
 			quitTool1
 		fi
-		if [[ ! "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == dmg && ! "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == pkg ]]; then
-			echo "\033[1;31mERROR : File type $(cat "combo/type-${SYSTEM_BUILD}.txt") is unsupported.\033[0m"
+		FILE_TYPE="$(cat "combo/type-${SYSTEM_BUILD}.txt")"
+		if [[ ! "${FILE_TYPE}" == dmg && ! "${FILE_TYPE}" == pkg ]]; then
+			echo "\033[1;31mERROR : File type ${FILE_TYPE} is unsupported.\033[0m"
 			quitTool1
 		fi
 		if [[ ! -d "$("xcode-select" -p)" ]]; then
@@ -117,7 +118,7 @@ function revertUsingCombo(){
 		cleanComboProcess
 		mkdir /tmp/NightPatch-tmp
 		# See https://github.com/NiklasRosenstein/pbzx
-		if [[ "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == dmg ]]; then
+		if [[ "${FILE_TYPE}" == dmg ]]; then
 			if [[ ! -f /tmp/update.dmg ]]; then
 				downloadCombo
 			fi
@@ -149,7 +150,7 @@ function revertUsingCombo(){
 				rm -rf /tmp/update.pkg
 			fi
 			cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
-		elif [[ "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == pkg ]]; then
+		elif [[ "${FILE_TYPE}" == pkg ]]; then
 			if [[ ! -f /tmp/update.pkg ]]; then
 				downloadCombo
 			fi
@@ -188,9 +189,9 @@ function revertUsingCombo(){
 		fi
 		echo "Extracting... (1)"
 		pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
-		if [[ "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == dmg ]]; then
+		if [[ "${FILE_TYPE}" == dmg ]]; then
 			cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
-		elif [[ "$(cat "combo/type-${SYSTEM_BUILD}.txt")" == pkg ]]; then
+		elif [[ "${FILE_TYPE}" == pkg ]]; then
 			cd /tmp/NightPatch-tmp/1
 		fi
 		if [[ ! -f Payload ]]; then
@@ -245,11 +246,11 @@ function downloadCombo(){
 	fi
 	echo "Downloading update... (takes a few minutes)"
 	if [[ "${verbose}" == YES ]]; then
-		curl -o "/tmp/update.$(cat "combo/type-${SYSTEM_BUILD}.txt")" "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
+		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
 	else
-		curl -o "/tmp/update.$(cat "combo/type-${SYSTEM_BUILD}.txt")" "$(cat "combo/url-${SYSTEM_BUILD}.txt")" > /dev/null 2>&1
+		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")" > /dev/null 2>&1
 	fi
-	if [[ ! -f "/tmp/update.$(cat "combo/type-${SYSTEM_BUILD}.txt")" ]]; then
+	if [[ ! -f "/tmp/update.${FILE_TYPE}" ]]; then
 		echo "\033[1;31mERROR : Failed to download file.\033[0m"
 		quitTool1
 	fi
