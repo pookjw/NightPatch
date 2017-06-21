@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=127
+VERSION=128
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -117,27 +117,26 @@ function revertUsingCombo(){
 		fi
 		cleanComboProcess
 		mkdir /tmp/NightPatch-tmp
-		# See https://github.com/NiklasRosenstein/pbzx
-		if [[ "${FILE_TYPE}" == dmg ]]; then
-			if [[ ! -f /tmp/update.dmg ]]; then
-				downloadCombo
+		if [[ ! -f "/tmp/update.${FILE_TYPE}" ]]; then
+			downloadCombo
+		fi
+		if [[ ! "${skipCheckSHA}" == YES ]]; then
+			echo "Checking downloaded file..."
+			if [[ ! -f "combo/sha-${SYSTEM_BUILD}.txt" ]]; then
+				echo "\033[1;31mERROR : I can't find combo/sha-${SYSTEM_BUILD}.txt file.\033[0m"
+				quitTool1
 			fi
-			if [[ ! "${skipCheckSHA}" == YES ]]; then
+			if [[ ! "$(shasum "/tmp/update.${FILE_TYPE}" | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
+				echo "\033[1;31mERROR : Downloaded file is wrong. Downloading again...\033[0m"
+				downloadCombo
 				echo "Checking downloaded file..."
-				if [[ ! -f "combo/sha-${SYSTEM_BUILD}.txt" ]]; then
-					echo "\033[1;31mERROR : I can't find combo/sha-${SYSTEM_BUILD}.txt file.\033[0m"
+				if [[ ! "$(shasum "/tmp/update.${FILE_TYPE}" | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
+					echo "\033[1;31mERROR : SHA not matching.\033[0m"
 					quitTool1
 				fi
-				if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
-					echo "\033[1;31mERROR : Downloaded file is wrong. Downloading again...\033[0m"
-					downloadCombo
-					echo "Checking downloaded file..."
-					if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
-						echo "\033[1;31mERROR : SHA not matching.\033[0m"
-						quitTool1
-					fi
-				fi
 			fi
+		fi
+		if [[ "${FILE_TYPE}" == dmg ]]; then
 			echo "Mounting disk image..."
 			if [[ "${verbose}" == YES ]]; then
 				hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
@@ -149,28 +148,9 @@ function revertUsingCombo(){
 			if [[ -f /tmp/update.pkg ]]; then
 				rm -rf /tmp/update.pkg
 			fi
-			cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
-		elif [[ "${FILE_TYPE}" == pkg ]]; then
-			if [[ ! -f /tmp/update.pkg ]]; then
-				downloadCombo
-			fi
-			if [[ ! "${skipCheckSHA}" == YES ]]; then
-				echo "Checking downloaded file..."
-				if [[ ! -f "combo/sha-${SYSTEM_BUILD}.txt" ]]; then
-					echo "\033[1;31mERROR : I can't find combo/sha-${SYSTEM_BUILD}.txt file.\033[0m"
-					quitTool1
-				fi
-				if [[ ! "$(shasum /tmp/update.pkg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
-					echo "\033[1;31mERROR : Downloaded file is wrong. Downloading again...\033[0m"
-					downloadCombo
-					echo "Checking downloaded file..."
-					if [[ ! "$(shasum /tmp/update.pkg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
-						echo "\033[1;31mERROR : SHA not matching.\033[0m"
-						quitTool1
-					fi
-				fi
-			fi
 		fi
+		cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
+		# See https://github.com/NiklasRosenstein/pbzx
 		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
 		if [[ "${verbose}" == YES ]]; then
 			curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master

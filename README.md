@@ -38,13 +38,15 @@ Enter this command on Terminal **without $**.
 
 ▲ GIF ▲
 
-## How to revert
+## How to revert using backup
 
 You can revert using backup located at /Library/NightPatch. (NightPatch creates backup automatically when you patch your macOS) Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert`
 
-If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. (**Not for macOS Beta**.)
+## How to revert using macOS combo Update
+
+If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. [See supported macOS build list](macOS_combo_list.md)
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
 
