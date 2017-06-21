@@ -6,8 +6,8 @@
 
 # Developer Beta
 
-- macOS 10.12.6 Developer Beta 4 (16G18a) **Only for NightPatch beta version YET.**
+- macOS 10.12.6 Developer Beta 4 (16G18a)
 
 # Public Beta
 
-- macOS 10.12.6 Public Beta 4 (16G18a) **Only for NightPatch beta version YET.**
+- macOS 10.12.6 Public Beta 4 (16G18a)

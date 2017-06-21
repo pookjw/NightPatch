@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=125
+VERSION=131
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -94,6 +94,15 @@ function revertSystem(){
 
 function revertUsingCombo(){
 	if [[ -f "combo/url-${SYSTEM_BUILD}.txt" ]]; then
+		if [[ ! -f "combo/type-${SYSTEM_BUILD}.txt" ]]; then
+			echo "\033[1;31mERROR : I can't find combo/type-${SYSTEM_BUILD}.txt.\033[0m"
+			quitTool1
+		fi
+		FILE_TYPE="$(cat "combo/type-${SYSTEM_BUILD}.txt")"
+		if [[ ! "${FILE_TYPE}" == dmg && ! "${FILE_TYPE}" == pkg ]]; then
+			echo "\033[1;31mERROR : File type ${FILE_TYPE} is unsupported.\033[0m"
+			quitTool1
+		fi
 		if [[ ! -d "$("xcode-select" -p)" ]]; then
 			echo "\033[1;31mERROR : Requires Command Line Tool.\033[0m Enter 'xcode-select --install' command to install this."
 			quitTool1
@@ -101,12 +110,14 @@ function revertUsingCombo(){
 		if [[ ! -d /usr/local/Cellar/xz ]]; then
 			showLines "*"
 			echo "\033[1;31mERROR : Requires lzma.\033[0m"
-			echo "1. Install Homebrew. https://brew.sh"
+			echo "1. Install Homebrew. See https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
 			showLines "*"
 			quitTool1
 		fi
-		if [[ ! -f /tmp/update.dmg ]]; then
+		cleanComboProcess
+		mkdir /tmp/NightPatch-tmp
+		if [[ ! -f "/tmp/update.${FILE_TYPE}" ]]; then
 			downloadCombo
 		fi
 		if [[ ! "${skipCheckSHA}" == YES ]]; then
@@ -115,18 +126,30 @@ function revertUsingCombo(){
 				echo "\033[1;31mERROR : I can't find combo/sha-${SYSTEM_BUILD}.txt file.\033[0m"
 				quitTool1
 			fi
-			if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
+			if [[ ! "$(shasum "/tmp/update.${FILE_TYPE}" | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
 				echo "\033[1;31mERROR : Downloaded file is wrong. Downloading again...\033[0m"
 				downloadCombo
 				echo "Checking downloaded file..."
-				if [[ ! "$(shasum /tmp/update.dmg | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
+				if [[ ! "$(shasum "/tmp/update.${FILE_TYPE}" | awk '{ print $1 }')" == "$(cat "combo/sha-${SYSTEM_BUILD}.txt")" ]]; then
 					echo "\033[1;31mERROR : SHA not matching.\033[0m"
 					quitTool1
 				fi
 			fi
 		fi
-		cleanComboProcess
-		mkdir /tmp/NightPatch-tmp
+		if [[ "${FILE_TYPE}" == dmg ]]; then
+			echo "Mounting disk image..."
+			if [[ "${verbose}" == YES ]]; then
+				hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
+			else
+				hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate > /dev/null 2>&1
+			fi
+			echo "\033[1;36mDO NOT OPEN $(ls /tmp/NightPatch-tmp/macOSUpdate).\033[0m"
+			echo "Copying file..."
+			if [[ -f /tmp/update.pkg ]]; then
+				rm -rf /tmp/update.pkg
+			fi
+			cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
+		fi
 		# See https://github.com/NiklasRosenstein/pbzx
 		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
 		if [[ "${verbose}" == YES ]]; then
@@ -144,16 +167,14 @@ function revertUsingCombo(){
 			echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 			quitTool1
 		fi
-		echo "Mounting disk image..."
-		if [[ "${verbose}" == YES ]]; then
-			hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate
-		else
-			hdiutil attach /tmp/update.dmg -mountpoint /tmp/NightPatch-tmp/macOSUpdate > /dev/null 2>&1
-		fi
-		echo "\033[1;36mDO NOT OPEN $(ls /tmp/NightPatch-tmp/macOSUpdate).\033[0m"
 		echo "Extracting... (1)"
-		pkgutil --expand /tmp/NightPatch-tmp/macOSUpdate/* /tmp/NightPatch-tmp/1
-		cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
+		pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
+		if [[ "${FILE_TYPE}" == dmg ]]; then
+			rm -rf /tmp/update.pkg
+			cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
+		elif [[ "${FILE_TYPE}" == pkg ]]; then
+			cd /tmp/NightPatch-tmp/1
+		fi
 		if [[ ! -f Payload ]]; then
 			echo "\033[1;31mERROR : Failed to extract pkg file.\033[0m"
 			quitTool1
@@ -206,11 +227,11 @@ function downloadCombo(){
 	fi
 	echo "Downloading update... (takes a few minutes)"
 	if [[ "${verbose}" == YES ]]; then
-		curl -o /tmp/update.dmg "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
+		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
 	else
-		curl -o /tmp/update.dmg "$(cat "combo/url-${SYSTEM_BUILD}.txt")" > /dev/null 2>&1
+		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")" > /dev/null 2>&1
 	fi
-	if [[ ! -f /tmp/update.dmg ]]; then
+	if [[ ! -f "/tmp/update.${FILE_TYPE}" ]]; then
 		echo "\033[1;31mERROR : Failed to download file.\033[0m"
 		quitTool1
 	fi
