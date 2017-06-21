@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=128
+VERSION=129
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -148,8 +148,8 @@ function revertUsingCombo(){
 			if [[ -f /tmp/update.pkg ]]; then
 				rm -rf /tmp/update.pkg
 			fi
+			cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
 		fi
-		cp /tmp/NightPatch-tmp/macOSUpdate/* /tmp/update.pkg
 		# See https://github.com/NiklasRosenstein/pbzx
 		echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
 		if [[ "${verbose}" == YES ]]; then
