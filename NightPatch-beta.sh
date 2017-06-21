@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=129
+VERSION=130
 BUILD=beta
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -110,7 +110,7 @@ function revertUsingCombo(){
 		if [[ ! -d /usr/local/Cellar/xz ]]; then
 			showLines "*"
 			echo "\033[1;31mERROR : Requires lzma.\033[0m"
-			echo "1. Install Homebrew. https://brew.sh"
+			echo "1. Install Homebrew. See https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install."
 			showLines "*"
 			quitTool1
@@ -170,6 +170,7 @@ function revertUsingCombo(){
 		echo "Extracting... (1)"
 		pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
 		if [[ "${FILE_TYPE}" == dmg ]]; then
+			rm -rf /tmp/update.pkg
 			cd /tmp/NightPatch-tmp/1/macOSUpdCombo*
 		elif [[ "${FILE_TYPE}" == pkg ]]; then
 			cd /tmp/NightPatch-tmp/1
