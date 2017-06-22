@@ -6,6 +6,8 @@
 
 # Developer Beta
 
+- macOS 10.13 Developer Beta 2 (17A291j)
+
 - macOS 10.13 Developer Preview 1 (17A264c)
 
 - macOS 10.12.6 Developer Beta 4 (16G18a)
