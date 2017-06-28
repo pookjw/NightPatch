@@ -24,6 +24,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.12.4 (16E195)
 
+About macOS 10.12.6 Beta 5 : I will upload patch file tomorrow; Sorry.
+
 [View more](macOS_list.md)
 
 ## How to patch
