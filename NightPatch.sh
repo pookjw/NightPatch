@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=131
+VERSION=132
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -156,7 +156,7 @@ function revertUsingCombo(){
 			curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
 			unzip -o /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
 		else
-			curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master > /dev/null 2>&1
+			curl -# -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
 			unzip -o /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp > /dev/null 2>&1
 		fi
 		cd /tmp/NightPatch-tmp/pbzx-master
@@ -229,7 +229,7 @@ function downloadCombo(){
 	if [[ "${verbose}" == YES ]]; then
 		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
 	else
-		curl -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")" > /dev/null 2>&1
+		curl -# -o "/tmp/update.${FILE_TYPE}" "$(cat "combo/url-${SYSTEM_BUILD}.txt")"
 	fi
 	if [[ ! -f "/tmp/update.${FILE_TYPE}" ]]; then
 		echo "\033[1;31mERROR : Failed to download file.\033[0m"
