@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=132
+VERSION=133
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -111,7 +111,11 @@ function revertUsingCombo(){
 			showLines "*"
 			echo "\033[1;31mERROR : Requires lzma.\033[0m"
 			echo "1. Install Homebrew. See https://brew.sh"
-			echo "2. Enter 'brew install xz' command to install."
+			if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
+				echo "2. Enter 'cd ~; brew install xz' command to install."
+			else
+				echo "2. Enter 'brew install xz' command to install."
+			fi
 			showLines "*"
 			quitTool1
 		fi

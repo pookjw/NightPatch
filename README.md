@@ -16,6 +16,8 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.13 Developer Beta 2 Update 1 (17A291m)
 
+- macOS 10.13 Public Beta 2 (17A291m)
+
 - macOS 10.12.6 Developer Beta 5 (16G23a)
 
 - macOS 10.12.6 Public Beta 5 (16G23a)
