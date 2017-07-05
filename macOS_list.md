@@ -12,6 +12,8 @@
 
 - macOS 10.13 Developer Preview 1 (17A264c)
 
+- macOS 10.12.6 Developer Beta 6 (16G24b)
+
 - macOS 10.12.6 Developer Beta 5 (16G23a)
 
 - macOS 10.12.6 Developer Beta 4 (16G18a)
@@ -35,6 +37,8 @@
 # Public Beta
 
 - macOS 10.13 Public Beta 2 (17A291m)
+
+- macOS 10.12.6 Public Beta 6 (16G24b)
 
 - macOS 10.12.6 Public Beta 5 (16G23a)
 
