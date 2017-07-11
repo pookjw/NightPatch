@@ -1,5 +1,5 @@
 #!/bin/sh
-VERSION=133
+VERSION=134
 BUILD=
 
 if [[ "${1}" == help || "${1}" == "-help" || "${1}" == "--help" ]]; then
@@ -110,11 +110,13 @@ function revertUsingCombo(){
 		if [[ ! -d /usr/local/Cellar/xz ]]; then
 			showLines "*"
 			echo "\033[1;31mERROR : Requires lzma.\033[0m"
-			echo "1. Install Homebrew. See https://brew.sh"
 			if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
-				echo "2. Enter 'cd ~; brew install xz' command to install."
+				echo "1. Enter 'cd ~' command."
+				echo "2. Install Homebrew. See https://brew.sh"
+				echo "3. Enter 'cd ~; brew install xz' command to install lzma."
 			else
-				echo "2. Enter 'brew install xz' command to install."
+				echo "1. Install Homebrew. See https://brew.sh"
+				echo "2. Enter 'brew install xz' command to install lzma."
 			fi
 			showLines "*"
 			quitTool1
@@ -373,7 +375,6 @@ function checkSystem(){
 		echo "\033[1;31mERROR : Requires macOS 10.12.4 or higher.\033[0m (Detected version : $(sw_vers -productVersion))"
 		quitTool1
 	fi
-	#if [[ ! "$(csrutil status)" == "System Integrity Protection status: disabled." ]]; then
 	if [[ "$(csrutil status | grep "System Integrity Protection status: disabled." | wc -l)" == "       0" && "$(csrutil status | grep "Filesystem Protections: disabled" | wc -l)" == "       0" ]]; then
 		echo "\033[1;31mERROR : Turn off System Integrity Protection before doing this.\033[0m"
 		echo "See http://apple.stackexchange.com/a/209530"
