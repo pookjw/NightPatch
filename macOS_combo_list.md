@@ -6,6 +6,8 @@
 
 # Developer Beta
 
+- macOS 10.13 Developer Beta 3 (17A306f)
+
 - macOS 10.13 Developer Beta 2 Update 1 (17A291m)
 
 - macOS 10.13 Developer Beta 2 (17A291j)
