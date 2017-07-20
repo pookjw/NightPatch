@@ -1,5 +1,7 @@
 # Normal Release
 
+- macOS 10.12.6 (16G29)
+
 - macOS 10.12.5 (16F73)
 
 - macOS 10.12.4 (16E195)
@@ -38,7 +40,7 @@
 
 # Public Beta
 
-- macOS 10.13 Public Beta 2 (17A306f) *Testing*
+- macOS 10.13 Public Beta 2 (17A306f) **Testing**
 
 - macOS 10.13 Public Beta 1 (17A291m)
 

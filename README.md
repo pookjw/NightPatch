@@ -16,9 +16,9 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 - macOS 10.13 Developer Beta 3 (17A306f)
 
-- macOS 10.13 Public Beta 2 (17A306f) *Testing*
+- macOS 10.13 Public Beta 2 (17A306f) **Testing**
 
-- macOS 10.12.6 (Coming Soon)
+- macOS 10.12.6 (16G29)
 
 - macOS 10.12.5 (16F73)
 
