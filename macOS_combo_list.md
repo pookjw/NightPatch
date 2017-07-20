@@ -22,7 +22,7 @@
 
 # Public Beta
 
-- macOS 10.13 Public Beta 2 (17A306f) **Testing**
+- macOS 10.13 Public Beta 2 (17A306f)
 
 - macOS 10.13 Public Beta 1 (17A291m)
 
