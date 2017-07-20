@@ -20,9 +20,9 @@
 
 # Public Beta
 
-- macOS 10.13 Public Beta 3 (17A306f)
+- macOS 10.13 Public Beta 2 (17A306f) *Testing*
 
-- macOS 10.13 Public Beta 2 (17A291m)
+- macOS 10.13 Public Beta 1 (17A291m)
 
 - macOS 10.12.6 Public Beta 6 (16G24b)
 
