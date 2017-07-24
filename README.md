@@ -14,7 +14,7 @@ Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
 
 ## Supported macOS build
 
-- macOS 10.13 Developer Beta 3 (17A306f)
+- macOS 10.13 Developer Beta 4 (17A315i)
 
 - macOS 10.13 Public Beta 2 (17A306f)
 
