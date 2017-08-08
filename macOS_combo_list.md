@@ -8,6 +8,8 @@
 
 # Developer Beta
 
+- macOS 10.13 Developer Beta 5 (17A330h)
+
 - macOS 10.13 Developer Beta 4 (17A315i)
 
 - macOS 10.13 Developer Beta 3 (17A306f)
@@ -23,6 +25,8 @@
 - macOS 10.12.6 Developer Beta 4 (16G18a)
 
 # Public Beta
+
+- macOS 10.13 Public Beta 3 (17A315i)
 
 - macOS 10.13 Public Beta 2 (17A306f)
 
