@@ -26,6 +26,8 @@
 
 # Public Beta
 
+- macOS 10.13 Public Beta 4 (17A330h)
+
 - macOS 10.13 Public Beta 3 (17A315i)
 
 - macOS 10.13 Public Beta 2 (17A306f)
