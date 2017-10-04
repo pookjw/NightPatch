@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=202
+TOOL_VERSION=203
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -79,13 +79,14 @@ function patchSystem(){
 	sudo cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
+	echo "Patching..."
 	CB_OFFSET="0x$(nm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | grep _ModelMinVersion | cut -d' ' -f 1 | sed -e 's/^0*//g')"
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "CB_OFFSET=${CB_OFFSET}"
 	fi
 	printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null
 	codesignCB
-	echo "Done."
+	echo "Done. Reboot your macOS."
 }
 
 function revertSystem(){
@@ -97,7 +98,7 @@ function revertSystem(){
 			sudo cp /Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo cp -r /Library/NightPatch/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			codesignCB
-			echo "Done."
+			echo "Done. Reboot your macOS."
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
 			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
@@ -221,7 +222,7 @@ function fixSystem(){
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
 	revertSystem > /dev/null
-	echo "Done."
+	echo "Done. Reboot your macOS."
 }
 
 function codesignCB(){
