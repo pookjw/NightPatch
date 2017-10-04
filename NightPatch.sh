@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=205
+TOOL_VERSION=206
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -58,6 +58,9 @@ function setDefaultSettings(){
 	if [[ "${1}" == "-skipCheckSystem" || "${2}" == "-skipCheckSystem" || "${3}" == "-skipCheckSystem" || "${4}" == "-skipCheckSystem" || "${5}" == "-skipCheckSystem" || "${6}" == "-skipCheckSystem" || "${7}" == "-skipCheckSystem" || "${8}" == "-skipCheckSystem" || "${9}" == "-skipCheckSystem" ]]; then
 		SKIP_CHECK_SYSTEM=YES
 	fi
+	if [[ "${1}" == "--test" || "${2}" == "--test" || "${3}" == "--test" || "${4}" == "--test" || "${5}" == "--test" || "${6}" == "--test" || "${7}" == "--test" || "${8}" == "--test" || "${9}" == "--test" ]]; then
+		TEST_MODE=YES
+	fi
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
 		echo "TOOL_MODE=${TOOL_MODE}"
@@ -67,6 +70,15 @@ function setDefaultSettings(){
 	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
+}
+
+function runTestMode(){
+	if [[ ! -d "$("xcode-select" -p)" ]]; then
+		CLT_LABEL="$(softwareupdate -l | grep -B 1 -E "Command Line (Developer|Tools)" | awk -F"*" '/^ +\\*/ {print $2}' | sed 's/^ *//' | tail -n1)"
+		sudo /usr/sbin/softwareupdate -i ${CLT_LABEL}
+		deleteFile "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
+		sudo /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
+	fi
 }
 
 function patchSystem(){
