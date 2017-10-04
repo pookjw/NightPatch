@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=204
+TOOL_VERSION=205
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -80,11 +80,23 @@ function patchSystem(){
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
 	echo "Patching..."
+	FIRST_SHA="$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')"
+	if [[ "${VERBOSE}" == YES ]]; then
+		echo "FIRST_SHA=${FIRST_SHA}"
+	fi
 	CB_OFFSET="0x$(nm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | grep _ModelMinVersion | cut -d' ' -f 1 | sed -e 's/^0*//g')"
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "CB_OFFSET=${CB_OFFSET}"
 	fi
 	printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null
+	SECOND_SHA="$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')"
+	if [[ "${VERBOSE}" == YES ]]; then
+		echo "SECOND_SHA=${SECOND_SHA}"
+	fi
+	if [[ "${FIRST_SHA}" == "${SECOND_SHA}" ]]; then
+		echo "\033[1;31mERROR : Faild to patch system file.\033[0m"
+		quitTool 1
+	fi
 	codesignCB
 	echo "Done. Reboot your macOS."
 }
