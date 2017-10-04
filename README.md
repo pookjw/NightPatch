@@ -10,21 +10,9 @@ Backup your Mac before applying.
 
 Not compatible with some third-party monitors.
 
-Referenced [Pike's blog](https://pikeralpha.wordpress.com/2017/01/30/4398/).
+## Supported macOS
 
-## Supported macOS build
-
-- macOS 10.13 Developer Beta 5 (17A330h)
-
-- macOS 10.13 Public Beta 4 (17A330h)
-
-- macOS 10.12.6 (16G29)
-
-- macOS 10.12.5 (16F73)
-
-- macOS 10.12.4 (16E195)
-
-[View more](macOS_list.md)
+macOS 10.12.4 or later including High Sierra.
 
 ## How to patch
 
@@ -32,23 +20,17 @@ Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh`
 
-▼ GIF ▼
-
-![Image](https://raw.githubusercontent.com/pookjw/gif/master/Image2.gif)
-
-▲ GIF ▲
-
 ## How to revert using backup
 
 You can revert using backup located at /Library/NightPatch. (NightPatch creates backup automatically when you patch your macOS) Enter this command on Terminal **without $**.
 
-`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh --revert`
 
 ## How to revert using macOS combo Update
 
-If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. [See supported macOS build list](macOS_combo_list.md)
+If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple.
 
-`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh -revert combo`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh --fix`
 
 ## Troubleshootings
 
@@ -60,12 +42,8 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 : Enter your login password.
 
-- ERROR : I can't find patch/[BUILD].patch file.
+## References
 
-: That’s because I didn’t make a patch file for your macOS. I’ll make for you when it possible.
+[aonez/NightShiftPatcher](https://github.com/aonez/NightShiftPatcher)
 
-## Document for expert
-
-- [Creating patch file](https://github.com/pookjw/NightPatch/wiki/Creating-patch-file) (for unsupported macOS build)
-
-- [NightPatch options](https://github.com/pookjw/NightPatch/wiki/NightPatch-options)
+[Supported Mac models for Night Shift in Sierra 10.12.4+](https://pikeralpha.wordpress.com/2017/01/30/4398/)
