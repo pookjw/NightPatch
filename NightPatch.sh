@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=207
+TOOL_VERSION=208
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -369,6 +369,9 @@ if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
 	checkSystem
 fi
 checkRoot
+if [[ "${TEST_MODE}" == YES ]]; then
+	runTestMode
+fi
 if [[ "${TOOL_MODE}" == patch ]]; then
 	patchSystem
 elif [[ "${TOOL_MODE}" == revert ]]; then
