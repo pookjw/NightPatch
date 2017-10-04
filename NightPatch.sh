@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=203
+TOOL_VERSION=204
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -113,10 +113,6 @@ function revertSystem(){
 }
 
 function fixSystem(){
-	if [[ ! -d "$("xcode-select" -p)" ]]; then
-		echo "\033[1;31mERROR : Requires Command Line Tool.\033[0m Enter 'xcode-select --install' command to install this."
-		quitTool 1
-	fi
 	if [[ ! -d /usr/local/Cellar/xz ]]; then
 		showLines "*"
 		echo "\033[1;31mERROR : Requires lzma.\033[0m"
@@ -272,6 +268,10 @@ function checkSystem(){
 	if [[ "$(csrutil status | grep "System Integrity Protection status: disabled." | wc -l)" == "       0" && "$(csrutil status | grep "Filesystem Protections: disabled" | wc -l)" == "       0" ]]; then
 		echo "\033[1;31mERROR : Turn off System Integrity Protection before doing this.\033[0m"
 		echo "See http://apple.stackexchange.com/a/209530"
+		quitTool 1
+	fi
+	if [[ ! -d "$("xcode-select" -p)" ]]; then
+		echo "\033[1;31mERROR : Requires Command Line Tool.\033[0m Enter 'xcode-select --install' command to install this."
 		quitTool 1
 	fi
 }
