@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=200
+TOOL_VERSION=201
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -21,9 +21,11 @@ function showHelpMessage(){
 function setDefaultSettings(){
 	if [[ "${1}" == "--help" || "${2}" == "--help" || "${3}" == "--help" || "${4}" == "--help" || "${5}" == "--help" || "${6}" == "--help" || "${7}" == "--help" || "${8}" == "--help" || "${9}" == "--help" ]]; then
 		showHelpMessage
+		quitTool 0
 	fi
 	if [[ "${1}" == "-help" || "${2}" == "-help" || "${3}" == "-help" || "${4}" == "-help" || "${5}" == "-help" || "${6}" == "-help" || "${7}" == "-help" || "${8}" == "-help" || "${9}" == "-help" ]]; then
 		showHelpMessage
+		quitTool 0
 	fi
 	if [[ "${1}" == "--revert" || "${2}" == "--revert" || "${3}" == "--revert" || "${4}" == "--revert" || "${5}" == "--revert" || "${6}" == "--revert" || "${7}" == "--revert" || "${8}" == "--revert" || "${9}" == "--revert" ]]; then
 		TOOL_MODE=revert
@@ -64,17 +66,34 @@ function setDefaultSettings(){
 }
 
 function patchSystem(){
-	:
+	# code from https://github.com/aonez/NightShiftPatcher
+	revertSystem
+	echo "Creating backup..."
+	deleteFile /Library/NightPatch
+	sudo mkdir -p /Library/NightPatch
+	sudo cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
+	sudo cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
+	sudo mv /tmp/NightPatchBuild /Library/NightPatch
+	CB_OFFSET="0x$(nm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | grep _ModelMinVersion | cut -d' ' -f 1 | sed -e 's/^0*//g')"
+	if [[ "${VERBOSE}" == YES ]]; then
+		echo "CB_OFFSET=${CB_OFFSET}"
+	fi
+	printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null
+	codesignCB
+	echo "Done."
 }
 
 function revertSystem(){
 	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
 		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "${SYSTEM_BUILD}" ]]; then
+			echo "Reverting..."
 			deleteFile /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			deleteFile /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			sudo cp /Library/NightPatch/CoreBrightness.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 			sudo cp -r /Library/NightPatch/_CodeSignature.bak /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature
 			codesignCB
+			echo "Done."
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
 			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
@@ -110,7 +129,7 @@ function fixSystem(){
 	deleteFile /tmp/NightPatch-tmp
 	mkdir -p /tmp/NightPatch-tmp
 	echo "Downloading pbzx-master... (https://github.com/NiklasRosenstein/pbzx)"
-	if [[ "${verbose}" == YES ]]; then
+	if [[ "${VERBOSE}" == YES ]]; then
 		curl -o /tmp/NightPatch-tmp/pbzx-master.zip https://codeload.github.com/NiklasRosenstein/pbzx/zip/master
 		unzip -o /tmp/NightPatch-tmp/pbzx-master.zip -d /tmp/NightPatch-tmp
 	else
@@ -131,23 +150,34 @@ function fixSystem(){
 			echo "ERROR: Failed to unpack update file."
 			quitTool 1
 		fi
-		if [[ ! -f /tmp/NightPatch-tmp/update.pkg ]]; then
+		if [[ ! -f /tmp/update.pkg ]]; then
 			ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
 			if [[ "${VERBOSE}" == YES ]]; then
 				echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
 			fi
-			curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
+			echo "Downloading catalog..."
+			if [[ "${VERBOSE}" == YES ]]; then
+				curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
+			else
+				curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
+			fi
 			if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
 				echo "ERROR: Failed to download!"
 				quitTool 1
 			fi
+			echo "Parsing catalog..."
 			gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
-			PACKAGE_URL=$(cat /tmp/NightPatch-tmp/assets.sucatalog.gz | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+			PACKAGE_URL=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
 			if [[ "${VERBOSE}" == YES ]]; then
 				echo "PACKAGE_URL=${PACKAGE_URL}"
 			fi
 			deleteFile /tmp/NightPatch-tmp/update.pkg
-			curl -o /tmp/NightPatch-tmp/update.pkg "${PACKAGE_URL}"
+			echo "Downloading update file..."
+			if [[ "${VERBOSE}" == YES ]]; then
+				curl -o /tmp/update.pkg "${PACKAGE_URL}"
+			else
+				curl -# -o /tmp/update.pkg "${PACKAGE_URL}"
+			fi
 		fi
 		echo "Extracting... (1)"
 		pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
@@ -186,8 +216,8 @@ function fixSystem(){
 	fi
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
-	echo "Reverting from backup..."
-	revertSystem
+	revertSystem > /dev/null
+	echo "Done."
 }
 
 function codesignCB(){
@@ -202,10 +232,10 @@ function codesignCB(){
 function deleteFile(){
 	if [[ ! -z "${1}" ]]; then
 		if [[ -d "${1}" ]]; then
-			rm -rf "${1}"
+			sudo rm -rf "${1}"
 		fi
 		if [[ -f "${1}" ]]; then
-			rm "${1}"
+			sudo rm "${1}"
 		fi
 	fi
 }
@@ -219,6 +249,25 @@ function showLines(){
 			PRINTED_COUNTS=$((${PRINTED_COUNTS}+1))
 		done
 		echo
+	fi
+}
+
+function checkSystem(){
+	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" -lt 12 ]]; then
+		MACOS_ERROR=YES
+	elif [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" == 12 ]]; then
+		if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" -lt 4 ]]; then
+			MACOS_ERROR=YES
+		fi
+	fi
+	if [[ "${MACOS_ERROR}" == YES ]]; then
+		echo "\033[1;31mERROR : Requires macOS 10.12.4 or higher.\033[0m (Detected version : ${SYSTEM_VERSION})"
+		quitTool 1
+	fi
+	if [[ "$(csrutil status | grep "System Integrity Protection status: disabled." | wc -l)" == "       0" && "$(csrutil status | grep "Filesystem Protections: disabled" | wc -l)" == "       0" ]]; then
+		echo "\033[1;31mERROR : Turn off System Integrity Protection before doing this.\033[0m"
+		echo "See http://apple.stackexchange.com/a/209530"
+		quitTool 1
 	fi
 }
 
@@ -283,7 +332,12 @@ function quitTool(){
 	exit "${1}"
 }
 
+#########################################################################
+
 setDefaultSettings "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}"
+if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
+	checkSystem
+fi
 checkRoot
 if [[ "${TOOL_MODE}" == patch ]]; then
 	patchSystem
