@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=206
+TOOL_VERSION=207
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -79,6 +79,7 @@ function runTestMode(){
 		deleteFile "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
 		sudo /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 	fi
+	quitTool 0
 }
 
 function patchSystem(){
