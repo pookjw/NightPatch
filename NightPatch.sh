@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=209
+TOOL_VERSION=210
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -43,6 +43,9 @@ function setDefaultSettings(){
 	if [[ "${1}" == "-fix" || "${2}" == "-fix" || "${3}" == "-fix" || "${4}" == "-fix" || "${5}" == "-fix" || "${6}" == "-fix" || "${7}" == "-fix" || "${8}" == "-fix" || "${9}" == "-fix" ]]; then
 		TOOL_MODE=fix
 	fi
+	if [[ "${1}" == "--test" || "${2}" == "--test" || "${3}" == "--test" || "${4}" == "--test" || "${5}" == "--test" || "${6}" == "--test" || "${7}" == "--test" || "${8}" == "--test" || "${9}" == "--test" ]]; then
+		TOOL_MODE=test
+	fi
 	if [[ -z "${TOOL_MODE}" ]]; then
 		TOOL_MODE=patch
 	fi
@@ -57,9 +60,6 @@ function setDefaultSettings(){
 	fi
 	if [[ "${1}" == "-skipCheckSystem" || "${2}" == "-skipCheckSystem" || "${3}" == "-skipCheckSystem" || "${4}" == "-skipCheckSystem" || "${5}" == "-skipCheckSystem" || "${6}" == "-skipCheckSystem" || "${7}" == "-skipCheckSystem" || "${8}" == "-skipCheckSystem" || "${9}" == "-skipCheckSystem" ]]; then
 		SKIP_CHECK_SYSTEM=YES
-	fi
-	if [[ "${1}" == "--test" || "${2}" == "--test" || "${3}" == "--test" || "${4}" == "--test" || "${5}" == "--test" || "${6}" == "--test" || "${7}" == "--test" || "${8}" == "--test" || "${9}" == "--test" ]]; then
-		TEST_MODE=YES
 	fi
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
@@ -372,13 +372,12 @@ if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
 	checkSystem
 fi
 checkRoot
-if [[ "${TEST_MODE}" == YES ]]; then
-	runTestMode
-fi
 if [[ "${TOOL_MODE}" == patch ]]; then
 	patchSystem
 elif [[ "${TOOL_MODE}" == revert ]]; then
 	revertSystem
 elif [[ "${TOOL_MODE}" == fix ]]; then
 	fixSystem
+elif [[ "${TOOL_MODE}" == test ]]; then
+	runTestMode
 fi
