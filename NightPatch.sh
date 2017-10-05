@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=208
+TOOL_VERSION=209
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -73,6 +73,7 @@ function setDefaultSettings(){
 }
 
 function runTestMode(){
+	# from https://raw.githubusercontent.com/Homebrew/install/master/install
 	if [[ ! -d "$("xcode-select" -p)" ]]; then
 		CLT_LABEL="$(softwareupdate -l | grep -B 1 -E "Command Line (Developer|Tools)" | awk -F"*" '/^ +\\*/ {print $2}' | sed 's/^ *//' | tail -n1)"
 		sudo /usr/sbin/softwareupdate -i ${CLT_LABEL}
@@ -100,8 +101,10 @@ function patchSystem(){
 	CB_OFFSET="0x$(nm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | grep _ModelMinVersion | cut -d' ' -f 1 | sed -e 's/^0*//g')"
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "CB_OFFSET=${CB_OFFSET}"
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+	else
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null 2>&1
 	fi
-	printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null
 	SECOND_SHA="$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')"
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "SECOND_SHA=${SECOND_SHA}"
