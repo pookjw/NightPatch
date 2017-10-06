@@ -1,17 +1,18 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=210
+TOOL_VERSION=211
 TOOL_BUILD=stable
 
 function showHelpMessage(){
-	echo "NightPatch (Version: ${TOOL_VERSION}): Enable Night Shift on any old Mac models."
+	echo "NightPatch (Version: ${TOOL_BUILD}-${TOOL_VERSION}): Enable Night Shift on any old Mac models."
 	echo "Usage: ./NightPatch.sh [mode] [sub options...]"
 	echo
 	echo "mode:"
 	echo "[empty]			Patch macOS"
 	echo "--revert		Revert macOS"
-	echo "--fix			Fix corrupted macOS System"
+	echo "--fix			Fix corrupted macOS system"
+	echo "--version		Show tool version"
 	echo
 	echo "sub options:"
 	echo "--verbose		verbose mode"
@@ -43,6 +44,9 @@ function setDefaultSettings(){
 	if [[ "${1}" == "-fix" || "${2}" == "-fix" || "${3}" == "-fix" || "${4}" == "-fix" || "${5}" == "-fix" || "${6}" == "-fix" || "${7}" == "-fix" || "${8}" == "-fix" || "${9}" == "-fix" ]]; then
 		TOOL_MODE=fix
 	fi
+	if [[ "${1}" == "--version" || "${2}" == "--version" || "${3}" == "--version" || "${4}" == "--version" || "${5}" == "--version" || "${6}" == "--version" || "${7}" == "--version" || "${8}" == "--version" || "${9}" == "--version" ]]; then
+		TOOL_MODE=version
+	fi
 	if [[ "${1}" == "--test" || "${2}" == "--test" || "${3}" == "--test" || "${4}" == "--test" || "${5}" == "--test" || "${6}" == "--test" || "${7}" == "--test" || "${8}" == "--test" || "${9}" == "--test" ]]; then
 		TOOL_MODE=test
 	fi
@@ -55,11 +59,17 @@ function setDefaultSettings(){
 	if [[ "${1}" == "-verbose" || "${2}" == "-verbose" || "${3}" == "-verbose" || "${4}" == "-verbose" || "${5}" == "-verbose" || "${6}" == "-verbose" || "${7}" == "-verbose" || "${8}" == "-verbose" || "${9}" == "-verbose" ]]; then
 		VERBOSE=YES
 	fi
+	if [[ -z "${VERBOSE}" ]]; then
+		VERBOSE=NO
+	fi
 	if [[ "${1}" == "--skipCheckSystem" || "${2}" == "--skipCheckSystem" || "${3}" == "--skipCheckSystem" || "${4}" == "--skipCheckSystem" || "${5}" == "--skipCheckSystem" || "${6}" == "--skipCheckSystem" || "${7}" == "--skipCheckSystem" || "${8}" == "--skipCheckSystem" || "${9}" == "--skipCheckSystem" ]]; then
 		SKIP_CHECK_SYSTEM=YES
 	fi
 	if [[ "${1}" == "-skipCheckSystem" || "${2}" == "-skipCheckSystem" || "${3}" == "-skipCheckSystem" || "${4}" == "-skipCheckSystem" || "${5}" == "-skipCheckSystem" || "${6}" == "-skipCheckSystem" || "${7}" == "-skipCheckSystem" || "${8}" == "-skipCheckSystem" || "${9}" == "-skipCheckSystem" ]]; then
 		SKIP_CHECK_SYSTEM=YES
+	fi
+	if [[ -z "${SKIP_CHECK_SYSTEM}" ]]; then
+		SKIP_CHECK_SYSTEM=NO
 	fi
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
@@ -80,12 +90,16 @@ function runTestMode(){
 		deleteFile "/tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress"
 		sudo /usr/bin/xcode-select --switch /Library/Developer/CommandLineTools
 	fi
-	quitTool 0
 }
 
 function patchSystem(){
 	# code from https://github.com/aonez/NightShiftPatcher
-	revertSystem > /dev/null
+	if [[ -f /Library/NightPatch/NightPatchBuild ]]; then
+		if [[ "$(cat /Library/NightPatch/NightPatchBuild)" == "${SYSTEM_BUILD}" ]]; then
+			echo "Detected backup, reverting..."
+			revertSystem > /dev/null
+		fi
+	fi
 	echo "Creating backup..."
 	deleteFile /Library/NightPatch
 	sudo mkdir -p /Library/NightPatch
@@ -131,12 +145,14 @@ function revertSystem(){
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
 			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
 			showCommandGuide "--fix"
+			quitTool 1
 		fi
 	else
 		echo "\033[1;31mERROR : No backup.\033[0m"
 		echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
 		echo
 		showCommandGuide "--fix"
+		quitTool 1
 	fi
 }
 
@@ -200,7 +216,7 @@ function fixSystem(){
 			if [[ "${VERBOSE}" == YES ]]; then
 				echo "PACKAGE_URL=${PACKAGE_URL}"
 			fi
-			deleteFile /tmp/NightPatch-tmp/update.pkg
+			deleteFile /tmp/update.pkg
 			echo "Downloading update file..."
 			if [[ "${VERBOSE}" == YES ]]; then
 				curl -o /tmp/update.pkg "${PACKAGE_URL}"
@@ -213,7 +229,7 @@ function fixSystem(){
 		cd /tmp/NightPatch-tmp/1
 		if [[ ! -f Payload ]]; then
 			echo "\033[1;31mERROR : Failed to extract pkg file. Re-downloading...\033[0m"
-			rm /tmp/update.pkg
+			deleteFile /tmp/update.pkg
 			COUNT=$((${COUNT}+1))
 		else
 			break
@@ -245,6 +261,7 @@ function fixSystem(){
 	fi
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
+	echo "Replacing..."
 	revertSystem > /dev/null
 	echo "Done. Reboot your macOS."
 }
@@ -362,6 +379,9 @@ function quitTool(){
 	deleteFile /tmp/NightPatch-tmp
 	deleteFile /tmp/NightPatch.zip
 	deleteFile /tmp/NightPatch-master
+	if [[ "${VERBOSE}" == YES ]]; then
+		echo "Exit code: ${1}"
+	fi
 	exit "${1}"
 }
 
@@ -378,6 +398,9 @@ elif [[ "${TOOL_MODE}" == revert ]]; then
 	revertSystem
 elif [[ "${TOOL_MODE}" == fix ]]; then
 	fixSystem
+elif [[ "${TOOL_MODE}" == version ]]; then
+	echo "${TOOL_BUILD}-${TOOL_VERSION}"
 elif [[ "${TOOL_MODE}" == test ]]; then
 	runTestMode
 fi
+quitTool 0
