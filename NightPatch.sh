@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=213
+TOOL_VERSION=214
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -280,10 +280,18 @@ function codesignCB(){
 function deleteFile(){
 	if [[ ! -z "${1}" ]]; then
 		if [[ -d "${1}" ]]; then
-			sudo rm -rf "${1}"
+			if [[ "${2}" == -n ]]; then
+				rm -rf "${1}"
+			else
+				sudo rm -rf "${1}"
+			fi
 		fi
 		if [[ -f "${1}" ]]; then
-			sudo rm "${1}"
+			if [[ "${2}" == -n ]]; then
+				rm "${1}"
+			else
+				sudo rm "${1}"
+			fi
 		fi
 	fi
 }
@@ -386,9 +394,9 @@ function quitTool(){
 			echo "--do-not-clean was defined as YES."
 		fi
 	else
-		deleteFile /tmp/NightPatch-tmp
-		deleteFile /tmp/NightPatch.zip
-		deleteFile /tmp/NightPatch-master
+		deleteFile /tmp/NightPatch-tmp -n
+		deleteFile /tmp/NightPatch.zip -n
+		deleteFile /tmp/NightPatch-master -n
 	fi
 	exit "${1}"
 }
