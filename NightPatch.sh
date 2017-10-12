@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=211
+TOOL_VERSION=212
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -212,16 +212,20 @@ function fixSystem(){
 			fi
 			echo "Parsing catalog..."
 			gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
-			PACKAGE_URL=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+			PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+			for VALUE in ${PACKAGE_URL_1}; do
+				PACKAGE_URL_2="${VALUE}"
+			done
 			if [[ "${VERBOSE}" == YES ]]; then
-				echo "PACKAGE_URL=${PACKAGE_URL}"
+				echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
+				echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
 			fi
 			deleteFile /tmp/update.pkg
 			echo "Downloading update file..."
 			if [[ "${VERBOSE}" == YES ]]; then
-				curl -o /tmp/update.pkg "${PACKAGE_URL}"
+				curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
 			else
-				curl -# -o /tmp/update.pkg "${PACKAGE_URL}"
+				curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
 			fi
 		fi
 		echo "Extracting... (1)"
