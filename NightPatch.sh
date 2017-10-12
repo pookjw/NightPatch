@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=212
+TOOL_VERSION=213
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -21,12 +21,10 @@ function showHelpMessage(){
 
 function setDefaultSettings(){
 	if [[ "${1}" == "--help" || "${2}" == "--help" || "${3}" == "--help" || "${4}" == "--help" || "${5}" == "--help" || "${6}" == "--help" || "${7}" == "--help" || "${8}" == "--help" || "${9}" == "--help" ]]; then
-		showHelpMessage
-		quitTool 0
+		TOOL_MODE=help
 	fi
 	if [[ "${1}" == "-help" || "${2}" == "-help" || "${3}" == "-help" || "${4}" == "-help" || "${5}" == "-help" || "${6}" == "-help" || "${7}" == "-help" || "${8}" == "-help" || "${9}" == "-help" ]]; then
-		showHelpMessage
-		quitTool 0
+		TOOL_MODE=help
 	fi
 	if [[ "${1}" == "--revert" || "${2}" == "--revert" || "${3}" == "--revert" || "${4}" == "--revert" || "${5}" == "--revert" || "${6}" == "--revert" || "${7}" == "--revert" || "${8}" == "--revert" || "${9}" == "--revert" ]]; then
 		TOOL_MODE=revert
@@ -380,11 +378,17 @@ function showCommandGuide(){
 }
 
 function quitTool(){
-	deleteFile /tmp/NightPatch-tmp
-	deleteFile /tmp/NightPatch.zip
-	deleteFile /tmp/NightPatch-master
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "Exit code: ${1}"
+	fi
+	if [[ "${2}" == "--do-not-clean" ]]; then
+		if [[ "${VERBOSE}" == YES ]]; then
+			echo "--do-not-clean was defined as YES."
+		fi
+	else
+		deleteFile /tmp/NightPatch-tmp
+		deleteFile /tmp/NightPatch.zip
+		deleteFile /tmp/NightPatch-master
 	fi
 	exit "${1}"
 }
@@ -392,19 +396,30 @@ function quitTool(){
 #########################################################################
 
 setDefaultSettings "${1}" "${2}" "${3}" "${4}" "${5}" "${6}" "${7}" "${8}" "${9}"
+
+if [[ "${TOOL_MODE}" == help ]]; then
+	showHelpMessage
+	quitTool 0 --do-not-clean
+elif [[ "${TOOL_MODE}" == version ]]; then
+	echo "${TOOL_BUILD}-${TOOL_VERSION}"
+	quitTool 0 --do-not-clean
+fi
+
 if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
 	checkSystem
 fi
 checkRoot
+
 if [[ "${TOOL_MODE}" == patch ]]; then
 	patchSystem
+	quitTool 0
 elif [[ "${TOOL_MODE}" == revert ]]; then
 	revertSystem
+	quitTool 0
 elif [[ "${TOOL_MODE}" == fix ]]; then
 	fixSystem
-elif [[ "${TOOL_MODE}" == version ]]; then
-	echo "${TOOL_BUILD}-${TOOL_VERSION}"
+	quitTool 0
 elif [[ "${TOOL_MODE}" == test ]]; then
 	runTestMode
+	quitTool 0
 fi
-quitTool 0
