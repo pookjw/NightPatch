@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=215
+TOOL_VERSION=216
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -74,6 +74,7 @@ function setDefaultSettings(){
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
 		echo "TOOL_VERSION=${TOOL_VERSION}"
+		echo "TOOL_BUILD=${TOOL_BUILD}"
 		echo "SYSTEM_BUILD=${SYSTEM_BUILD}"
 		echo "SYSTEM_VERSION=${SYSTEM_VERSION}"
 		echo "TOOL_MODE=${TOOL_MODE}"
@@ -190,57 +191,70 @@ function fixSystem(){
 		echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 		quitTool 1
 	fi
-	COUNT=1
-	while(true); do
-		if [[ "${COUNT}" == 3 ]]; then
-			echo "\033[1;31mERROR : Failed to unpack update file.\033[0m"
-			quitTool 1
-		fi
-		if [[ ! -f /tmp/update.pkg ]]; then
-			ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
-			if [[ "${VERBOSE}" == YES ]]; then
-				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-				echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
-			fi
-			echo "Downloading catalog..."
-			if [[ "${VERBOSE}" == YES ]]; then
-				curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
-			else
-				curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
-			fi
-			if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
-				echo "\033[1;31mERROR : Failed to download!\033[0m"
-				quitTool 1
-			fi
-			echo "Parsing catalog..."
-			gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
-			PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
-			for VALUE in ${PACKAGE_URL_1}; do
-				PACKAGE_URL_2="${VALUE}"
-			done
-			if [[ "${VERBOSE}" == YES ]]; then
-				echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
-				echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
-			fi
-			deleteFile /tmp/update.pkg
-			echo "Downloading update file..."
-			if [[ "${VERBOSE}" == YES ]]; then
-				curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
-			else
-				curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
-			fi
-		fi
-		echo "Extracting... (1)"
-		pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
-		cd /tmp/NightPatch-tmp/1
-		if [[ ! -f Payload ]]; then
-			echo "\033[1;31mERROR : Failed to extract pkg file. Re-downloading...\033[0m"
-			deleteFile /tmp/update.pkg
-			COUNT=$((${COUNT}+1))
-		else
-			break
-		fi
+	deleteFile /tmp/update.pkg
+	CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
+	if [[ "${VERBOSE}" == YES ]]; then
+		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+		echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
+		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
+	else
+		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
+	fi
+	ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
+	if [[ "${VERBOSE}" == YES ]]; then
+		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+		echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
+	fi
+	echo "Downloading catalog..."
+	if [[ "${VERBOSE}" == YES ]]; then
+		curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
+	else
+		curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
+	fi
+	if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
+		echo "\033[1;31mERROR : Failed to download!\033[0m"
+		quitTool 1
+	fi
+	echo "Parsing catalog..."
+	gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
+	PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+	for VALUE in ${PACKAGE_URL_1}; do
+		PACKAGE_URL_2="${VALUE}"
 	done
+	if [[ "${VERBOSE}" == YES ]]; then
+		echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
+		echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
+	fi
+	if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+		if [[ "${VERBOSE}" == YES ]]; then
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+		else
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
+		fi
+	else
+		if [[ "${VERBOSE}" == YES ]]; then
+			echo "Enrolling to ${CURRENT_ENROLLED_SEED}..."
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll ${CURRENT_ENROLLED_SEED}
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+		else
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll ${CURRENT_ENROLLED_SEED} > /dev/null 2>&1
+		fi
+	fi
+	deleteFile /tmp/update.pkg
+	echo "Downloading update file..."
+	if [[ "${VERBOSE}" == YES ]]; then
+		curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
+	else
+		curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
+	fi
+	echo "Extracting... (1)"
+	pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
+	cd /tmp/NightPatch-tmp/1
+	if [[ ! -f Payload ]]; then
+		echo "\033[1;31mERROR : Failed to extract pkg file.\033[0m"
+		quitTool 1
+	fi
 	mv Payload /tmp/NightPatch-tmp
 	mkdir -p /tmp/NightPatch-tmp/2
 	cd /tmp/NightPatch-tmp/2
