@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=216
+TOOL_VERSION=217
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -196,9 +196,13 @@ function fixSystem(){
 	if [[ "${VERBOSE}" == YES ]]; then
 		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
 		echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
+		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
+		fi
 	else
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
+		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
+		fi
 	fi
 	ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
 	if [[ "${VERBOSE}" == YES ]]; then
@@ -231,14 +235,6 @@ function fixSystem(){
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
 		else
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
-		fi
-	else
-		if [[ "${VERBOSE}" == YES ]]; then
-			echo "Enrolling to ${CURRENT_ENROLLED_SEED}..."
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll ${CURRENT_ENROLLED_SEED}
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		else
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll ${CURRENT_ENROLLED_SEED} > /dev/null 2>&1
 		fi
 	fi
 	deleteFile /tmp/update.pkg
