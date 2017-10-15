@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=214
+TOOL_VERSION=215
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -69,15 +69,18 @@ function setDefaultSettings(){
 	if [[ -z "${SKIP_CHECK_SYSTEM}" ]]; then
 		SKIP_CHECK_SYSTEM=NO
 	fi
+	SYSTEM_BUILD="$(sw_vers -buildVersion)"
+	SYSTEM_VERSION="$(sw_vers -productVersion)"
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
+		echo "TOOL_VERSION=${TOOL_VERSION}"
+		echo "SYSTEM_BUILD=${SYSTEM_BUILD}"
+		echo "SYSTEM_VERSION=${SYSTEM_VERSION}"
 		echo "TOOL_MODE=${TOOL_MODE}"
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
 		showLines "*"
 	fi
-	SYSTEM_BUILD="$(sw_vers -buildVersion)"
-	SYSTEM_VERSION="$(sw_vers -productVersion)"
 }
 
 function runTestMode(){
@@ -196,6 +199,7 @@ function fixSystem(){
 		if [[ ! -f /tmp/update.pkg ]]; then
 			ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
 			if [[ "${VERBOSE}" == YES ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
 				echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
 			fi
 			echo "Downloading catalog..."
