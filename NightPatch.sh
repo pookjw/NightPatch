@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=217
+TOOL_VERSION=218
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -284,8 +284,13 @@ function fixSystem(){
 
 function codesignCB(){
 	if [[ "${VERBOSE}" == YES ]]; then
+		if [[ -f /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness.tbd ]]; then
+			echo "Detected CoreBrightness.tbd, removing..."
+		fi
+		deleteFile /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness.tbd
 		sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
 	else
+		deleteFile /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness.tbd
 		sudo codesign -f -s - /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness > /dev/null 2>&1
 	fi
 	sudo chmod +x /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness
