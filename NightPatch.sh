@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=218
+TOOL_VERSION=219
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -280,6 +280,7 @@ function fixSystem(){
 	echo "Replacing..."
 	revertSystem > /dev/null
 	echo "Done. Reboot your macOS."
+	echo "Cleaning up..."
 }
 
 function codesignCB(){
