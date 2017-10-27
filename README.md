@@ -42,6 +42,10 @@ If you deleted backup (or not backed up), enter this command on Terminal **witho
 
 : Enter your login password.
 
+- xcrun error
+
+: Try `xcode-select --install` command.
+
 ## References
 
 [aonez/NightShiftPatcher](https://github.com/aonez/NightShiftPatcher)
