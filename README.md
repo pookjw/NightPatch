@@ -28,7 +28,7 @@ You can revert using backup located at /Library/NightPatch. (NightPatch creates 
 
 ## How to revert using macOS combo Update
 
-If you deleted backup (or not backed up), enter this command on Terminal **without $**. NightPatch will download original system file from Apple.
+If you deleted backup (or not backed up with NightPatch), enter this command on Terminal **without $**. NightPatch will download original system file from Apple. This method works without backup.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh --fix`
 
