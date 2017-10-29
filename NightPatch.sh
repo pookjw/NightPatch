@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=219
+TOOL_VERSION=220
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -205,6 +205,10 @@ function fixSystem(){
 		fi
 	fi
 	ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
+	if [[ -z "$ASSET_CATALOG_URL" || "$ASSET_CATALOG_URL" == "(null)" ]]; then
+		echo "\033[1;31mERROR : Failed to get catalog url.\033[0m"
+		quitTool 1
+	fi
 	if [[ "${VERBOSE}" == YES ]]; then
 		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
 		echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
@@ -237,6 +241,10 @@ function fixSystem(){
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
 		fi
 	fi
+	if [[ -z "$PACKAGE_URL_2" ]]; then
+		echo "\033[1;31mERROR : macOS $SYSTEM_VERSION is not supported for '--fix' option. Update to latest macOS.\033[0m"
+		quitTool 1
+	fi 
 	deleteFile /tmp/update.pkg
 	echo "Downloading update file..."
 	if [[ "${VERBOSE}" == YES ]]; then
