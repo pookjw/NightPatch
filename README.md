@@ -14,13 +14,19 @@ Not compatible with some third-party monitors.
 
 macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](https://www.dropbox.com/s/9n9pri835ls3s71/list.txt?dl=1))
 
-About 10.13.2 MacBook (not Air and Pro) Users: It doesn't work now because iMac Pro information was added on system. I will fix it as soon as possible.
+If you're using 10.13.2 with MacBook (not Air and Pro), try beta version.
 
 ## How to patch
 
 Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh`
+
+## How to patch with beta version of NightPatch
+
+Enter this command on Terminal **without $**.
+
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch-beta.sh`
 
 ## How to revert using backup
 
