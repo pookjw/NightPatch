@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=220
+TOOL_VERSION=222
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -71,12 +71,31 @@ function setDefaultSettings(){
 	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
+	#############################################################
+	# Trying to copy my code again? https://github.com/${blah blah blah}/commit/a77b978c6d0495384a0d436a1e220d5d6ff0a1cf
+	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" == 13 ]]; then
+		if [[ -z "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" ]]; then # for 10.13
+			PATCH_COUNT=6
+		else
+			if [ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" -ge 2 ]; then
+				PATCH_COUNT=7 # for 10.13.2 or later < 10.14
+			else
+				PATCH_COUNT=6 # for 10.13.1
+			fi
+		fi
+	elif [ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" -gt 13 ]; then # for 10.14 or later
+		PATCH_COUNT=7
+	else
+		PATCH_COUNT=6 # for 10.12.4 or later < 10.13
+	fi
+	#############################################################
 	if [[ "${VERBOSE}" == YES ]]; then
 		showLines "*"
 		echo "TOOL_VERSION=${TOOL_VERSION}"
 		echo "TOOL_BUILD=${TOOL_BUILD}"
 		echo "SYSTEM_BUILD=${SYSTEM_BUILD}"
 		echo "SYSTEM_VERSION=${SYSTEM_VERSION}"
+		echo "PATCH_COUNT=${PATCH_COUNT}"
 		echo "TOOL_MODE=${TOOL_MODE}"
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
@@ -117,9 +136,9 @@ function patchSystem(){
 	CB_OFFSET="0x$(nm /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | grep _ModelMinVersion | cut -d' ' -f 1 | sed -e 's/^0*//g')"
 	if [[ "${VERBOSE}" == YES ]]; then
 		echo "CB_OFFSET=${CB_OFFSET}"
-		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+		patchCB
 	else
-		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc > /dev/null 2>&1
+		patchCB > /dev/null 2>&1
 	fi
 	SECOND_SHA="$(shasum /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness | awk '{ print $1 }')"
 	if [[ "${VERBOSE}" == YES ]]; then
@@ -131,6 +150,14 @@ function patchSystem(){
 	fi
 	codesignCB
 	echo "Done. Reboot your macOS."
+}
+
+function patchCB(){
+	if [[ "${PATCH_COUNT}" == 6 ]]; then
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+	elif [[ "${PATCH_COUNT}" == 7 ]]; then
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=27 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+	fi
 }
 
 function revertSystem(){
