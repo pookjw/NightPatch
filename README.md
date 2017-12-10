@@ -12,7 +12,7 @@ Not compatible with some third-party monitors.
 
 ## Supported macOS
 
-macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md)
+macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md))
 
 ## How to patch
 
