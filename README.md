@@ -14,6 +14,8 @@ Not compatible with some third-party monitors.
 
 macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](https://www.dropbox.com/s/9n9pri835ls3s71/list.txt?dl=1))
 
+About 10.13.2 MacBook (not Air and Pro) Users: It doesn't work now because iMac Pro information was added on system. I will fix it as soon as possible.
+
 ## How to patch
 
 Enter this command on Terminal **without $**.
