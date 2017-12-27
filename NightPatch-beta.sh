@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=221
+TOOL_VERSION=223
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -156,7 +156,7 @@ function patchCB(){
 	if [[ "${PATCH_COUNT}" == 6 ]]; then
 		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
 	elif [[ "${PATCH_COUNT}" == 7 ]]; then
-		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=27 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=28 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
 	fi
 }
 
