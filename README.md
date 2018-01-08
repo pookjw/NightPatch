@@ -14,6 +14,8 @@ Not compatible with some third-party monitors.
 
 macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md))
 
+Also supports MacBook with macOS 10.13.2. Others don't support this at this time.
+
 ## How to patch
 
 Enter this command on Terminal **without $**.
@@ -55,3 +57,5 @@ If you deleted backup (or not backed up with NightPatch), enter this command on 
 [aonez/NightShiftPatcher](https://github.com/aonez/NightShiftPatcher)
 
 [Supported Mac models for Night Shift in Sierra 10.12.4+](https://pikeralpha.wordpress.com/2017/01/30/4398/)
+
+[Developing story of NightPatch (Korean)](https://gist.github.com/pookjw/fec08f471796bf054e0fccdfa60c714c)
