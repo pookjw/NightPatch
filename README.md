@@ -14,7 +14,7 @@ Not compatible with some third-party monitors.
 
 macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md))
 
-Also supports MacBook with macOS 10.13.2. Others don't support this at this time.
+Also supports MacBook with macOS 10.13.2.
 
 ## How to patch
 
