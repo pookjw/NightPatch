@@ -58,6 +58,3 @@ If you deleted backup (or not backed up with NightPatch), enter this command on 
 
 [Supported Mac models for Night Shift in Sierra 10.12.4+](https://pikeralpha.wordpress.com/2017/01/30/4398/)
 
-## and
-
-[Developing story of NightPatch (Korean)](https://gist.github.com/pookjw/fec08f471796bf054e0fccdfa60c714c)
