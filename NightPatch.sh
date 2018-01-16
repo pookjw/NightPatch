@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=222
+TOOL_VERSION=224
 TOOL_BUILD=stable
 
 function showHelpMessage(){
@@ -72,7 +72,6 @@ function setDefaultSettings(){
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
 	#############################################################
-	# Trying to copy my code again? https://github.com/${blah blah blah}/commit/a77b978c6d0495384a0d436a1e220d5d6ff0a1cf
 	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" == 13 ]]; then
 		if [[ -z "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" ]]; then # for 10.13
 			PATCH_COUNT=6
@@ -156,7 +155,7 @@ function patchCB(){
 	if [[ "${PATCH_COUNT}" == 6 ]]; then
 		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=24 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
 	elif [[ "${PATCH_COUNT}" == 7 ]]; then
-		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=27 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
+		printf "\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00" | sudo dd count=28 bs=1 seek=${CB_OFFSET} of=/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness conv=notrunc
 	fi
 }
 
