@@ -46,7 +46,7 @@ If you deleted backup (or not backed up with NightPatch), enter this command on 
 
 - NightPatch repeatedly requires password.
 
-: This problem occurs when you tried with old command. Try with [new command](https://github.com/pookjw/NightPatch#how-to-patch)
+: Update to latest macOS to solve this, or run NightPatch with `sudo su`.
 
 - xcrun error
 
