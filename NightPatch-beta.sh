@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=226
+TOOL_VERSION=227
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -391,7 +391,7 @@ function checkHardware(){
 	# MacBook8,x
 	###############
 	if [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookPro")" ]]; then
-		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f2 | cut -d"," -f1)" -ge 9 ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f4 | cut -d"," -f1)" -ge 9 ]]; then
 			HW_ERROR=YES
 		fi
 	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "iMacPro")" ]]; then
@@ -401,7 +401,7 @@ function checkHardware(){
 			HW_ERROR=YES
 		fi
 	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "Macmini")" ]]; then
-		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"i" -f2 | cut -d"," -f1)" -ge 6 ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"i" -f3 | cut -d"," -f1)" -ge 6 ]]; then
 			HW_ERROR=YES
 		fi
 	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookAir")" ]]; then
