@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=228
+TOOL_VERSION=229
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -115,6 +115,7 @@ function setDefaultSettings(){
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
 		echo "SKIP_CHECK_HW=${SKIP_CHECK_HW}"
+		echo "PWD=${PWD}"
 		showLines "*"
 	fi
 }
@@ -486,7 +487,7 @@ function checkRoot(){
 }
 
 function showCommandGuide(){
-	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
+	if [[ "${PWD}" == /tmp/NightPatch-master ]]; then
 		if [[ "${TOOL_BUILD}" == beta ]]; then
 			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; sudo ./NightPatch-beta.sh ${1}"
 		else
