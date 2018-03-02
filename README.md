@@ -42,7 +42,7 @@ Enter this command on Terminal **without $**.
 
 - [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 229 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a))
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 230 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a))
 
 ## Troubleshootings
 

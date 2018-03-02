@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=229
+TOOL_VERSION=230
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -487,7 +487,7 @@ function checkRoot(){
 }
 
 function showCommandGuide(){
-	if [[ "${PWD}" == /tmp/NightPatch-master ]]; then
+	if [[ "${PWD}" == /tmp/NightPatch-master  || "${PWD}" == /private/tmp/NightPatch-master ]]; then
 		if [[ "${TOOL_BUILD}" == beta ]]; then
 			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; sudo ./NightPatch-beta.sh ${1}"
 		else
