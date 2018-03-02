@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=223
+TOOL_VERSION=225
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -16,7 +16,9 @@ function showHelpMessage(){
 	echo
 	echo "sub options:"
 	echo "--verbose		verbose mode"
+	echo "--do-not-patch		don't patch macOS"
 	echo "--skipCheckSystem	Skip checking system (macOS version, SIP)"
+	echo "--skipCheckHW		Skip checking hardware"
 }
 
 function setDefaultSettings(){
@@ -69,10 +71,22 @@ function setDefaultSettings(){
 	if [[ -z "${SKIP_CHECK_SYSTEM}" ]]; then
 		SKIP_CHECK_SYSTEM=NO
 	fi
+	if [[ "${1}" == "--do-not-patch" || "${2}" == "--do-not-patch" || "${3}" == "--do-not-patch" || "${4}" == "--do-not-patch" || "${5}" == "--do-not-patch" || "${6}" == "--do-not-patch" || "${7}" == "--do-not-patch" || "${8}" == "--do-not-patch" || "${9}" == "--do-not-patch" ]]; then
+		DO_NOT_PATCH=YES
+	fi
+	if [[ -z "${DO_NOT_PATCH}" ]]; then
+		DO_NOT_PATCH=NO
+	fi
+	if [[ "${1}" == "--skipCheckHW" || "${2}" == "--skipCheckHW" || "${3}" == "--skipCheckHW" || "${4}" == "--skipCheckHW" || "${5}" == "--skipCheckHW" || "${6}" == "--skipCheckHW" || "${7}" == "--skipCheckHW" || "${8}" == "--skipCheckHW" || "${9}" == "--skipCheckHW" ]]; then
+		SKIP_CHECK_HW=YES
+	fi
+	if [[ -z "${SKIP_CHECK_HW}" ]]; then
+		SKIP_CHECK_HW=NO
+	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
+	MACHINE_MODEL="$(sysctl -n hw.model)"
 	#############################################################
-	# Trying to copy my code again? https://github.com/${blah blah blah}/commit/a77b978c6d0495384a0d436a1e220d5d6ff0a1cf
 	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" == 13 ]]; then
 		if [[ -z "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" ]]; then # for 10.13
 			PATCH_COUNT=6
@@ -95,10 +109,12 @@ function setDefaultSettings(){
 		echo "TOOL_BUILD=${TOOL_BUILD}"
 		echo "SYSTEM_BUILD=${SYSTEM_BUILD}"
 		echo "SYSTEM_VERSION=${SYSTEM_VERSION}"
+		echo "MACHINE_MODEL=${MACHINE_MODEL}"
 		echo "PATCH_COUNT=${PATCH_COUNT}"
 		echo "TOOL_MODE=${TOOL_MODE}"
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
+		echo "SKIP_CHECK_HW=${SKIP_CHECK_HW}"
 		showLines "*"
 	fi
 }
@@ -363,6 +379,51 @@ function showLines(){
 	fi
 }
 
+function checkHardware(){
+	# compability list from https://pikeralpha.wordpress.com/2017/11/06/supported-mac-models-for-night-shift-in-high-sierra-10-13-2/
+	###############
+	# MacBookPro9,x
+	# iMacPro1,x
+	# iMac13,x
+	# Macmini6,x
+	# MacBookAir5,x
+	# MacPro6,x
+	# MacBook8,x
+	###############
+	if [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookPro")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f2 | cut -d"," -f1)" -ge 9 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "iMacPro")" ]]; then
+		HW_ERROR=YES
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "iMac")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"c" -f2 | cut -d"," -f1)" -ge 13 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "Macmini")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"i" -f2 | cut -d"," -f1)" -ge 6 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookAir")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"r" -f2 | cut -d"," -f1)" -ge 5 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacPro")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f2 | cut -d"," -f1)" -ge 6 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBook")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"k" -f2 | cut -d"," -f1)" -ge 8 ]]; then
+			HW_ERROR=YES
+		fi
+	fi
+	if [[ "${HW_ERROR}" == YES ]]; then
+		echo "\033[1;31mERROR : Your macOS already supports Night Shift by default.\033[0m (Detected hardware : ${MACHINE_MODEL}) If you want to ignore this warning, try this command \033[1;31mwithout $\033[0m."
+		showCommandGuide "--skipCheckHW"
+		quitTool 1
+	fi
+}
+
 function checkSystem(){
 	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" -lt 12 ]]; then
 		MACOS_ERROR=YES
@@ -468,13 +529,20 @@ elif [[ "${TOOL_MODE}" == version ]]; then
 	quitTool 0 --do-not-clean
 fi
 
+if [[ ! "${SKIP_CHECK_HW}" == YES ]]; then
+	checkHardware
+fi
 if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
 	checkSystem
 fi
 checkRoot
 
 if [[ "${TOOL_MODE}" == patch ]]; then
-	patchSystem
+	if [[ "${DO_NOT_PATCH}" == YES ]]; then
+		echo "DO_NOT_PATCH=YES"
+	else
+		patchSystem
+	fi
 	quitTool 0
 elif [[ "${TOOL_MODE}" == revert ]]; then
 	revertSystem
