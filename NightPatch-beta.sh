@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=225
+TOOL_VERSION=226
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -380,7 +380,7 @@ function showLines(){
 }
 
 function checkHardware(){
-	# compability list from https://pikeralpha.wordpress.com/2017/11/06/supported-mac-models-for-night-shift-in-high-sierra-10-13-2/
+	# compatibility list from https://pikeralpha.wordpress.com/2017/11/06/supported-mac-models-for-night-shift-in-high-sierra-10-13-2/
 	###############
 	# MacBookPro9,x
 	# iMacPro1,x
@@ -488,15 +488,15 @@ function checkRoot(){
 function showCommandGuide(){
 	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
 		if [[ "${BUILD}" == beta ]]; then
-			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; ./NightPatch-beta.sh ${1}"
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; sudo ./NightPatch-beta.sh ${1}"
 		else
-			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh ${1}"
 		fi
 	else
 		if [[ "${TOOL_BUILD}" == beta ]]; then
-			echo "\033[1;31m$\033[0m ./NightPatch-beta.sh ${1}"
+			echo "\033[1;31m$\033[0m sudo ./NightPatch-beta.sh ${1}"
 		else
-			echo "\033[1;31m$\033[0m ./NightPatch.sh ${1}"
+			echo "\033[1;31m$\033[0m sudo ./NightPatch.sh ${1}"
 		fi
 	fi
 }
