@@ -34,6 +34,16 @@ If you deleted backup (or not backed up with NightPatch), enter this command on 
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh --fix`
 
+## How to run beta build
+
+Enter this command on Terminal **without $**.
+
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh`
+
+- [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
+
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 227 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a))
+
 ## Troubleshootings
 
 - ERROR : Turn off System Integrity Protection before doing this.
