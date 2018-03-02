@@ -38,7 +38,7 @@ If you deleted backup (or not backed up with NightPatch), enter this command on 
 
 Enter this command on Terminal **without $**.
 
-`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh`
+`$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch-beta.sh`
 
 - [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
 
