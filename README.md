@@ -40,15 +40,11 @@ Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch-beta.sh`
 
-- [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
+- [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 240
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 239 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a), [232](https://github.com/pookjw/NightPatch/commit/b758e234f163f2a1d3be6c5906acc3d7c25a9936), [237](https://github.com/pookjw/NightPatch/commit/49d249516bd016dafd874ba33bf1d0b4eb598463))
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 239
 
 If you want to revert using backup, use `--revert`. Also using macOS combo Update is `--fix`.
-
-## Known bug
-
-`--fix` option doesn't work on Public macOS; only works for Developer beta and Public beta now. It means 10.13.4 works but 10.13.3 doesn't work. I fixed this issue on NightPatch beta build so if you want to use `--fix` on 10.13.3, try beta build.
 
 ## Troubleshootings
 

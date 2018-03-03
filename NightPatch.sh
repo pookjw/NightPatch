@@ -1,8 +1,9 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=224
+TOOL_VERSION=240
 TOOL_BUILD=stable
+CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
 function showHelpMessage(){
 	echo "NightPatch (Version: ${TOOL_BUILD}-${TOOL_VERSION}): Enable Night Shift on any old Mac models."
@@ -16,7 +17,10 @@ function showHelpMessage(){
 	echo
 	echo "sub options:"
 	echo "--verbose		verbose mode"
+	echo "--do-not-patch		don't patch macOS"
 	echo "--skipCheckSystem	Skip checking system (macOS version, SIP)"
+	echo "--skipCheckHW		Skip checking hardware"
+	echo "--use-local-cache		use local cache"
 }
 
 function setDefaultSettings(){
@@ -69,8 +73,27 @@ function setDefaultSettings(){
 	if [[ -z "${SKIP_CHECK_SYSTEM}" ]]; then
 		SKIP_CHECK_SYSTEM=NO
 	fi
+	if [[ "${1}" == "--do-not-patch" || "${2}" == "--do-not-patch" || "${3}" == "--do-not-patch" || "${4}" == "--do-not-patch" || "${5}" == "--do-not-patch" || "${6}" == "--do-not-patch" || "${7}" == "--do-not-patch" || "${8}" == "--do-not-patch" || "${9}" == "--do-not-patch" ]]; then
+		DO_NOT_PATCH=YES
+	fi
+	if [[ -z "${DO_NOT_PATCH}" ]]; then
+		DO_NOT_PATCH=NO
+	fi
+	if [[ "${1}" == "--skipCheckHW" || "${2}" == "--skipCheckHW" || "${3}" == "--skipCheckHW" || "${4}" == "--skipCheckHW" || "${5}" == "--skipCheckHW" || "${6}" == "--skipCheckHW" || "${7}" == "--skipCheckHW" || "${8}" == "--skipCheckHW" || "${9}" == "--skipCheckHW" ]]; then
+		SKIP_CHECK_HW=YES
+	fi
+	if [[ -z "${SKIP_CHECK_HW}" ]]; then
+		SKIP_CHECK_HW=NO
+	fi
+	if [[ "${1}" == "--use-local-cache" || "${2}" == "--use-local-cache" || "${3}" == "--use-local-cache" || "${4}" == "--use-local-cache" || "${5}" == "--use-local-cache" || "${6}" == "--use-local-cache" || "${7}" == "--use-local-cache" || "${8}" == "--use-local-cache" || "${9}" == "--use-local-cache" ]]; then
+		USE_LOCAL_CACHE=YES
+	fi
+	if [[ -z "${SKIP_CHECK_HW}" ]]; then
+		USE_LOCAL_CACHE=NO
+	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
+	MACHINE_MODEL="$(sysctl -n hw.model)"
 	#############################################################
 	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" == 13 ]]; then
 		if [[ -z "$(echo "${SYSTEM_VERSION}" | cut -d"." -f3)" ]]; then # for 10.13
@@ -94,10 +117,14 @@ function setDefaultSettings(){
 		echo "TOOL_BUILD=${TOOL_BUILD}"
 		echo "SYSTEM_BUILD=${SYSTEM_BUILD}"
 		echo "SYSTEM_VERSION=${SYSTEM_VERSION}"
+		echo "MACHINE_MODEL=${MACHINE_MODEL}"
 		echo "PATCH_COUNT=${PATCH_COUNT}"
 		echo "TOOL_MODE=${TOOL_MODE}"
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
+		echo "SKIP_CHECK_HW=${SKIP_CHECK_HW}"
+		echo "USE_LOCAL_CACHE=${USE_LOCAL_CACHE}"
+		echo "PWD=${PWD}"
 		showLines "*"
 	fi
 }
@@ -188,10 +215,10 @@ function fixSystem(){
 	if [[ ! -d /usr/local/Cellar/xz ]]; then
 		showLines "*"
 		echo "\033[1;31mERROR : Requires lzma.\033[0m"
-		if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
+		if [[ "${PWD}" == /tmp/NightPatch-master  || "${PWD}" == /private/tmp/NightPatch-master ]]; then
 			echo "1. Enter 'cd ~' command."
 			echo "2. Install Homebrew. See https://brew.sh"
-			echo "3. Enter 'brew install xz' command to install lzma."
+			echo "3. Enter 'cd ~; brew install xz' command to install lzma."
 		else
 			echo "1. Install Homebrew. See https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install lzma."
@@ -217,68 +244,77 @@ function fixSystem(){
 		echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 		quitTool 1
 	fi
-	deleteFile /tmp/update.pkg
-	CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
-	if [[ "${VERBOSE}" == YES ]]; then
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
-		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
-		fi
-	else
-		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
-		fi
-	fi
-	ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
-	if [[ -z "$ASSET_CATALOG_URL" || "$ASSET_CATALOG_URL" == "(null)" ]]; then
-		echo "\033[1;31mERROR : Failed to get catalog url.\033[0m"
-		quitTool 1
-	fi
-	if [[ "${VERBOSE}" == YES ]]; then
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
-	fi
-	echo "Downloading catalog..."
-	if [[ "${VERBOSE}" == YES ]]; then
-		curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
-	else
-		curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${ASSET_CATALOG_URL}"
-	fi
-	if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
-		echo "\033[1;31mERROR : Failed to download!\033[0m"
-		quitTool 1
-	fi
-	echo "Parsing catalog..."
-	gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
-	PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
-	for VALUE in ${PACKAGE_URL_1}; do
-		PACKAGE_URL_2="${VALUE}"
-	done
-	if [[ "${VERBOSE}" == YES ]]; then
-		echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
-		echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
-	fi
-	if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+	if [[ ! "${USE_LOCAL_CACHE}" == YES || ! -f /tmp/update.pkg ]]; then
+		CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
 		if [[ "${VERBOSE}" == YES ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+			echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
+			if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
+			fi
 		else
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
+			if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
+			fi
 		fi
-	fi
-	if [[ -z "$PACKAGE_URL_2" ]]; then
-		echo "\033[1;31mERROR : macOS $SYSTEM_VERSION is not supported for '--fix' option. Update to latest macOS.\033[0m"
-		quitTool 1
-	fi 
-	deleteFile /tmp/update.pkg
-	echo "Downloading update file..."
-	if [[ "${VERBOSE}" == YES ]]; then
-		curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
-	else
-		curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
+		if [[ -z "$ASSET_CATALOG_URL" || "$ASSET_CATALOG_URL" == "(null)" ]]; then
+			echo "\033[1;31mERROR : Failed to get catalog url.\033[0m"
+			quitTool 1
+		fi
+		if [[ "${VERBOSE}" == YES ]]; then
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+			echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
+		fi
+		for URL in ${ASSET_CATALOG_URL} ${CATALOG_URL}; do
+			echo "Downloading catalog..."
+			deleteFile /tmp/NightPatch-tmp/assets.sucatalog.gz
+			if [[ "${VERBOSE}" == YES ]]; then
+				curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			else
+				curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			fi
+			if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
+				echo "\033[1;31mERROR : Failed to download!\033[0m"
+				quitTool 1
+			fi
+			echo "Parsing catalog..."
+			deleteFile /tmp/NightPatch-tmp/assets.sucatalog
+			gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
+			PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+			for VALUE in ${PACKAGE_URL_1}; do
+				PACKAGE_URL_2="${VALUE}"
+			done
+			if [[ "${VERBOSE}" == YES ]]; then
+				echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
+				echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
+			fi
+			if [[ ! -z "${PACKAGE_URL_2}" ]]; then
+				break
+			fi
+		done
+		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+			if [[ "${VERBOSE}" == YES ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+			else
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
+			fi
+		fi
+		if [[ -z "${PACKAGE_URL_2}" ]]; then
+			echo "\033[1;31mERROR : macOS $SYSTEM_VERSION is not supported for '--fix' option. Update to latest macOS.\033[0m"
+			quitTool 1
+		fi 
+		deleteFile /tmp/update.pkg
+		echo "Downloading update file..."
+		if [[ "${VERBOSE}" == YES ]]; then
+			curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		else
+			curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		fi
 	fi
 	echo "Extracting... (1)"
+	deleteFile /tmp/NightPatch-tmp/1
 	pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
 	cd /tmp/NightPatch-tmp/1
 	if [[ ! -f Payload ]]; then
@@ -362,6 +398,51 @@ function showLines(){
 	fi
 }
 
+function checkHardware(){
+	# compatibility list from https://pikeralpha.wordpress.com/2017/11/06/supported-mac-models-for-night-shift-in-high-sierra-10-13-2/
+	###############
+	# MacBookPro9,x
+	# iMacPro1,x
+	# iMac13,x
+	# Macmini6,x
+	# MacBookAir5,x
+	# MacPro6,x
+	# MacBook8,x
+	###############
+	if [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookPro")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f4 | cut -d"," -f1)" -ge 9 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "iMacPro")" ]]; then
+		HW_ERROR=YES
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "iMac")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"c" -f2 | cut -d"," -f1)" -ge 13 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "Macmini")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"i" -f3 | cut -d"," -f1)" -ge 6 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBookAir")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"r" -f2 | cut -d"," -f1)" -ge 5 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacPro")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"o" -f2 | cut -d"," -f1)" -ge 6 ]]; then
+			HW_ERROR=YES
+		fi
+	elif [[ ! -z "$(echo "${MACHINE_MODEL}" | grep "MacBook")" ]]; then
+		if [[ "$(echo "${MACHINE_MODEL}" | cut -d"k" -f2 | cut -d"," -f1)" -ge 8 ]]; then
+			HW_ERROR=YES
+		fi
+	fi
+	if [[ "${HW_ERROR}" == YES ]]; then
+		echo "\033[1;31mERROR : Your macOS already supports Night Shift by default.\033[0m (Detected hardware : ${MACHINE_MODEL}) If you want to ignore this warning, try this command \033[1;31mwithout $\033[0m."
+		showCommandGuide "--skipCheckHW"
+		quitTool 1
+	fi
+}
+
 function checkSystem(){
 	if [[ "$(echo "${SYSTEM_VERSION}" | cut -d"." -f2)" -lt 12 ]]; then
 		MACOS_ERROR=YES
@@ -424,17 +505,17 @@ function checkRoot(){
 }
 
 function showCommandGuide(){
-	if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
-		if [[ "${BUILD}" == beta ]]; then
-			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; ./NightPatch-beta.sh ${1}"
+	if [[ "${PWD}" == /tmp/NightPatch-master  || "${PWD}" == /private/tmp/NightPatch-master ]]; then
+		if [[ "${TOOL_BUILD}" == beta ]]; then
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch-beta.sh; sudo ./NightPatch-beta.sh ${1}"
 		else
-			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; ./NightPatch.sh ${1}"
+			echo "\033[1;31m$\033[0m cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch.sh ${1}"
 		fi
 	else
 		if [[ "${TOOL_BUILD}" == beta ]]; then
-			echo "\033[1;31m$\033[0m ./NightPatch-beta.sh ${1}"
+			echo "\033[1;31m$\033[0m sudo ./NightPatch-beta.sh ${1}"
 		else
-			echo "\033[1;31m$\033[0m ./NightPatch.sh ${1}"
+			echo "\033[1;31m$\033[0m sudo ./NightPatch.sh ${1}"
 		fi
 	fi
 }
@@ -467,13 +548,20 @@ elif [[ "${TOOL_MODE}" == version ]]; then
 	quitTool 0 --do-not-clean
 fi
 
+if [[ ! "${SKIP_CHECK_HW}" == YES ]]; then
+	checkHardware
+fi
 if [[ ! "${SKIP_CHECK_SYSTEM}" == YES ]]; then
 	checkSystem
 fi
 checkRoot
 
 if [[ "${TOOL_MODE}" == patch ]]; then
-	patchSystem
+	if [[ "${DO_NOT_PATCH}" == YES ]]; then
+		echo "DO_NOT_PATCH=YES"
+	else
+		patchSystem
+	fi
 	quitTool 0
 elif [[ "${TOOL_MODE}" == revert ]]; then
 	revertSystem
