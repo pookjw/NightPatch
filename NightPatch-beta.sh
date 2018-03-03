@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=234
+TOOL_VERSION=235
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -271,6 +271,7 @@ function fixSystem(){
 			quitTool 1
 		fi
 		echo "Parsing catalog..."
+		deleteFile /tmp/NightPatch-tmp/assets.sucatalog
 		gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
 		PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
 		for VALUE in ${PACKAGE_URL_1}; do
