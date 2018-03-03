@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=236
+TOOL_VERSION=237
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -20,6 +20,7 @@ function showHelpMessage(){
 	echo "--do-not-patch		don't patch macOS"
 	echo "--skipCheckSystem	Skip checking system (macOS version, SIP)"
 	echo "--skipCheckHW		Skip checking hardware"
+	echo "--use-download-cache		use download cache"
 }
 
 function setDefaultSettings(){
@@ -84,6 +85,12 @@ function setDefaultSettings(){
 	if [[ -z "${SKIP_CHECK_HW}" ]]; then
 		SKIP_CHECK_HW=NO
 	fi
+	if [[ "${1}" == "--use-download-cache" || "${2}" == "--use-download-cache" || "${3}" == "--use-download-cache" || "${4}" == "--use-download-cache" || "${5}" == "--use-download-cache" || "${6}" == "--use-download-cache" || "${7}" == "--use-download-cache" || "${8}" == "--use-download-cache" || "${9}" == "--use-download-cache" ]]; then
+		USE_DOWNLOAD_CACHE=YES
+	fi
+	if [[ -z "${SKIP_CHECK_HW}" ]]; then
+		USE_DOWNLOAD_CACHE=NO
+	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
 	MACHINE_MODEL="$(sysctl -n hw.model)"
@@ -116,6 +123,7 @@ function setDefaultSettings(){
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
 		echo "SKIP_CHECK_HW=${SKIP_CHECK_HW}"
+		echo "USE_DOWNLOAD_CACHE=${USE_DOWNLOAD_CACHE}"
 		echo "PWD=${PWD}"
 		showLines "*"
 	fi
@@ -236,75 +244,78 @@ function fixSystem(){
 		echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 		quitTool 1
 	fi
-	deleteFile /tmp/update.pkg
-	CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
-	if [[ "${VERBOSE}" == YES ]]; then
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
-		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
-		fi
-	else
-		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
-		fi
-	fi
-	ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
-	if [[ -z "$ASSET_CATALOG_URL" || "$ASSET_CATALOG_URL" == "(null)" ]]; then
-		echo "\033[1;31mERROR : Failed to get catalog url.\033[0m"
-		quitTool 1
-	fi
-	if [[ "${VERBOSE}" == YES ]]; then
-		sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
-	fi
-	for URL in ${ASSET_CATALOG_URL} ${CATALOG_URL}; do
-		echo "Downloading catalog..."
-		deleteFile /tmp/NightPatch-tmp/assets.sucatalog.gz
+	if [[ ! "${USE_DOWNLOAD_CACHE}" == YES || ! -f /tmp/update.pkg ]]; then
+		CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
 		if [[ "${VERBOSE}" == YES ]]; then
-			curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+			echo "CURRENT_ENROLLED_SEED=${CURRENT_ENROLLED_SEED}"
+			if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed
+			fi
 		else
-			curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil enroll DeveloperSeed > /dev/null 2>&1
+			fi
 		fi
-		if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
-			echo "\033[1;31mERROR : Failed to download!\033[0m"
+		ASSET_CATALOG_URL=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep CatalogURL | cut -d" " -f2)
+		if [[ -z "$ASSET_CATALOG_URL" || "$ASSET_CATALOG_URL" == "(null)" ]]; then
+			echo "\033[1;31mERROR : Failed to get catalog url.\033[0m"
 			quitTool 1
 		fi
-		echo "Parsing catalog..."
-		deleteFile /tmp/NightPatch-tmp/assets.sucatalog
-		gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
-		PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
-		for VALUE in ${PACKAGE_URL_1}; do
-			PACKAGE_URL_2="${VALUE}"
-		done
 		if [[ "${VERBOSE}" == YES ]]; then
-			echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
-			echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
-		fi
-		if [[ ! -z "${PACKAGE_URL_2}" ]]; then
-			break
-		fi
-	done
-	if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
-		if [[ "${VERBOSE}" == YES ]]; then
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
-		else
-			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
+			echo "ASSET_CATALOG_URL=${ASSET_CATALOG_URL}"
 		fi
-	fi
-	if [[ -z "${PACKAGE_URL_2}" ]]; then
-		echo "\033[1;31mERROR : macOS $SYSTEM_VERSION is not supported for '--fix' option. Update to latest macOS.\033[0m"
-		quitTool 1
-	fi 
-	deleteFile /tmp/update.pkg
-	echo "Downloading update file..."
-	if [[ "${VERBOSE}" == YES ]]; then
-		curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
-	else
-		curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		for URL in ${ASSET_CATALOG_URL} ${CATALOG_URL}; do
+			echo "Downloading catalog..."
+			deleteFile /tmp/NightPatch-tmp/assets.sucatalog.gz
+			if [[ "${VERBOSE}" == YES ]]; then
+				curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			else
+				curl -# -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
+			fi
+			if [[ ! -f /tmp/NightPatch-tmp/assets.sucatalog.gz ]]; then
+				echo "\033[1;31mERROR : Failed to download!\033[0m"
+				quitTool 1
+			fi
+			echo "Parsing catalog..."
+			deleteFile /tmp/NightPatch-tmp/assets.sucatalog
+			gunzip /tmp/NightPatch-tmp/assets.sucatalog.gz
+			PACKAGE_URL_1=$(cat /tmp/NightPatch-tmp/assets.sucatalog | grep macOSUpd${SYSTEM_VERSION}.pkg | cut -d">" -f2 | cut -d"<" -f1)
+			for VALUE in ${PACKAGE_URL_1}; do
+				PACKAGE_URL_2="${VALUE}"
+			done
+			if [[ "${VERBOSE}" == YES ]]; then
+				echo "PACKAGE_URL_1=${PACKAGE_URL_1}"
+				echo "PACKAGE_URL_2=${PACKAGE_URL_2}"
+			fi
+			if [[ ! -z "${PACKAGE_URL_2}" ]]; then
+				break
+			fi
+		done
+		if [[ "${CURRENT_ENROLLED_SEED}" == "(null)" ]]; then
+			if [[ "${VERBOSE}" == YES ]]; then
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current
+			else
+				sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil unenroll > /dev/null 2>&1
+			fi
+		fi
+		if [[ -z "${PACKAGE_URL_2}" ]]; then
+			echo "\033[1;31mERROR : macOS $SYSTEM_VERSION is not supported for '--fix' option. Update to latest macOS.\033[0m"
+			quitTool 1
+		fi 
+		deleteFile /tmp/update.pkg
+		echo "Downloading update file..."
+		if [[ "${VERBOSE}" == YES ]]; then
+			curl -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		else
+			curl -# -o /tmp/update.pkg "${PACKAGE_URL_2}"
+		fi
 	fi
 	echo "Extracting... (1)"
+	deleteFile /tmp/NightPatch-tmp/1
+	mkdir -p /tmp/NightPatch-tmp/1
 	pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
 	cd /tmp/NightPatch-tmp/1
 	if [[ ! -f Payload ]]; then
