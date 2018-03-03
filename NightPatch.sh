@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=242
+TOOL_VERSION=244
 TOOL_BUILD=stable
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -152,6 +152,7 @@ function patchSystem(){
 	sudo mkdir -p /Library/NightPatch
 	sudo cp /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
 	sudo cp -r /System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
+	deleteFile /tmp/NightPatchBuild
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
 	echo "Patching..."
@@ -342,9 +343,7 @@ function fixSystem(){
 	sudo mkdir /Library/NightPatch
 	sudo cp /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/CoreBrightness /Library/NightPatch/CoreBrightness.bak
 	sudo cp -r /tmp/NightPatch-tmp/2/System/Library/PrivateFrameworks/CoreBrightness.framework/Versions/A/_CodeSignature /Library/NightPatch/_CodeSignature.bak
-	if [[ -f /tmp/NightPatchBuild ]]; then
-		sudo rm /tmp/NightPatchBuild
-	fi
+	deleteFile /tmp/NightPatchBuild
 	echo "${SYSTEM_BUILD}" >> /tmp/NightPatchBuild
 	sudo mv /tmp/NightPatchBuild /Library/NightPatch
 	echo "Replacing..."
