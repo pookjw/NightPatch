@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=237
+TOOL_VERSION=238
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -315,7 +315,6 @@ function fixSystem(){
 	fi
 	echo "Extracting... (1)"
 	deleteFile /tmp/NightPatch-tmp/1
-	mkdir -p /tmp/NightPatch-tmp/1
 	pkgutil --expand /tmp/update.pkg /tmp/NightPatch-tmp/1
 	cd /tmp/NightPatch-tmp/1
 	if [[ ! -f Payload ]]; then
