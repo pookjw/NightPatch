@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=230
+TOOL_VERSION=231
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -206,7 +206,7 @@ function fixSystem(){
 	if [[ ! -d /usr/local/Cellar/xz ]]; then
 		showLines "*"
 		echo "\033[1;31mERROR : Requires lzma.\033[0m"
-		if [[ "$(pwd)" == /tmp/NightPatch-master ]]; then
+		if [[ "${PWD}" == /tmp/NightPatch-master  || "${PWD}" == /private/tmp/NightPatch-master ]]; then
 			echo "1. Enter 'cd ~' command."
 			echo "2. Install Homebrew. See https://brew.sh"
 			echo "3. Enter 'brew install xz' command to install lzma."
