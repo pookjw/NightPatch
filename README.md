@@ -46,7 +46,7 @@ Enter this command on Terminal **without $**.
 
 ## Known bug
 
-`--fix` option doesn't work on Public macOS; only works for Developer beta and Public beta now. It means 10.13.4 works but 10.13.3 doesn't works. I fixed this issue on NightPatch beta build so if you want to use `--fix` on 10.13.3, try beta build.
+`--fix` option doesn't work on Public macOS; only works for Developer beta and Public beta now. It means 10.13.4 works but 10.13.3 doesn't work. I fixed this issue on NightPatch beta build so if you want to use `--fix` on 10.13.3, try beta build.
 
 ## Troubleshootings
 
