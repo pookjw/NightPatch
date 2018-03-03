@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=233
+TOOL_VERSION=234
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -260,6 +260,7 @@ function fixSystem(){
 	fi
 	for URL in ${ASSET_CATALOG_URL} ${CATALOG_URL}; do
 		echo "Downloading catalog..."
+		deleteFile /tmp/NightPatch-tmp/assets.sucatalog.gz
 		if [[ "${VERBOSE}" == YES ]]; then
 			curl -o /tmp/NightPatch-tmp/assets.sucatalog.gz "${URL}"
 		else

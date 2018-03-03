@@ -42,7 +42,11 @@ Enter this command on Terminal **without $**.
 
 - [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 233 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a))
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 234 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a), [232](https://github.com/pookjw/NightPatch/commit/b758e234f163f2a1d3be6c5906acc3d7c25a9936))
+
+## Known bug
+
+`--fix` option doesn't work on Public macOS; only works for Developer beta and Public beta now. It means 10.13.4 works but 10.13.3 doesn't works. I fixed this issue on NightPatch beta build so if you want to use `--fix` on 10.13.3, try beta build.
 
 ## Troubleshootings
 
