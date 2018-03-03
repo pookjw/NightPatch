@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=239
+TOOL_VERSION=241
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -88,7 +88,7 @@ function setDefaultSettings(){
 	if [[ "${1}" == "--use-local-cache" || "${2}" == "--use-local-cache" || "${3}" == "--use-local-cache" || "${4}" == "--use-local-cache" || "${5}" == "--use-local-cache" || "${6}" == "--use-local-cache" || "${7}" == "--use-local-cache" || "${8}" == "--use-local-cache" || "${9}" == "--use-local-cache" ]]; then
 		USE_LOCAL_CACHE=YES
 	fi
-	if [[ -z "${SKIP_CHECK_HW}" ]]; then
+	if [[ -z "${USE_LOCAL_CACHE}" ]]; then
 		USE_LOCAL_CACHE=NO
 	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
