@@ -70,3 +70,5 @@ If you want to revert using backup, use `--revert`. Also using macOS combo Updat
 
 [Supported Mac models for Night Shift in Sierra 10.12.4+](https://pikeralpha.wordpress.com/2017/01/30/4398/)
 
+[Supported Mac models for Night Shift in High Sierra 10.13.2](https://pikeralpha.wordpress.com/2017/11/06/supported-mac-models-for-night-shift-in-high-sierra-10-13-2/)
+
