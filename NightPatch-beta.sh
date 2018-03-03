@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=231
+TOOL_VERSION=232
 TOOL_BUILD=beta
 
 function showHelpMessage(){
@@ -209,7 +209,7 @@ function fixSystem(){
 		if [[ "${PWD}" == /tmp/NightPatch-master  || "${PWD}" == /private/tmp/NightPatch-master ]]; then
 			echo "1. Enter 'cd ~' command."
 			echo "2. Install Homebrew. See https://brew.sh"
-			echo "3. Enter 'brew install xz' command to install lzma."
+			echo "3. Enter 'cd ~; brew install xz' command to install lzma."
 		else
 			echo "1. Install Homebrew. See https://brew.sh"
 			echo "2. Enter 'brew install xz' command to install lzma."
