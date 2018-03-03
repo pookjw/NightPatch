@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=238
+TOOL_VERSION=239
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -20,7 +20,7 @@ function showHelpMessage(){
 	echo "--do-not-patch		don't patch macOS"
 	echo "--skipCheckSystem	Skip checking system (macOS version, SIP)"
 	echo "--skipCheckHW		Skip checking hardware"
-	echo "--use-download-cache		use download cache"
+	echo "--use-local-cache		use local cache"
 }
 
 function setDefaultSettings(){
@@ -85,11 +85,11 @@ function setDefaultSettings(){
 	if [[ -z "${SKIP_CHECK_HW}" ]]; then
 		SKIP_CHECK_HW=NO
 	fi
-	if [[ "${1}" == "--use-download-cache" || "${2}" == "--use-download-cache" || "${3}" == "--use-download-cache" || "${4}" == "--use-download-cache" || "${5}" == "--use-download-cache" || "${6}" == "--use-download-cache" || "${7}" == "--use-download-cache" || "${8}" == "--use-download-cache" || "${9}" == "--use-download-cache" ]]; then
-		USE_DOWNLOAD_CACHE=YES
+	if [[ "${1}" == "--use-local-cache" || "${2}" == "--use-local-cache" || "${3}" == "--use-local-cache" || "${4}" == "--use-local-cache" || "${5}" == "--use-local-cache" || "${6}" == "--use-local-cache" || "${7}" == "--use-local-cache" || "${8}" == "--use-local-cache" || "${9}" == "--use-local-cache" ]]; then
+		USE_LOCAL_CACHE=YES
 	fi
 	if [[ -z "${SKIP_CHECK_HW}" ]]; then
-		USE_DOWNLOAD_CACHE=NO
+		USE_LOCAL_CACHE=NO
 	fi
 	SYSTEM_BUILD="$(sw_vers -buildVersion)"
 	SYSTEM_VERSION="$(sw_vers -productVersion)"
@@ -123,7 +123,7 @@ function setDefaultSettings(){
 		echo "VERBOSE=${VERBOSE}"
 		echo "SKIP_CHECK_SYSTEM=${SKIP_CHECK_SYSTEM}"
 		echo "SKIP_CHECK_HW=${SKIP_CHECK_HW}"
-		echo "USE_DOWNLOAD_CACHE=${USE_DOWNLOAD_CACHE}"
+		echo "USE_LOCAL_CACHE=${USE_LOCAL_CACHE}"
 		echo "PWD=${PWD}"
 		showLines "*"
 	fi
@@ -244,7 +244,7 @@ function fixSystem(){
 		echo "\033[1;31mERROR : Failed to compile pbzx.\033[0m"
 		quitTool 1
 	fi
-	if [[ ! "${USE_DOWNLOAD_CACHE}" == YES || ! -f /tmp/update.pkg ]]; then
+	if [[ ! "${USE_LOCAL_CACHE}" == YES || ! -f /tmp/update.pkg ]]; then
 		CURRENT_ENROLLED_SEED=$(sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current | grep "Currently enrolled in" | cut -d" " -f4)
 		if [[ "${VERBOSE}" == YES ]]; then
 			sudo /System/Library/PrivateFrameworks/Seeding.framework/Versions/A/Resources/seedutil current

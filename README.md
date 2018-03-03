@@ -42,7 +42,7 @@ Enter this command on Terminal **without $**.
 
 - [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 224
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 238 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a), [232](https://github.com/pookjw/NightPatch/commit/b758e234f163f2a1d3be6c5906acc3d7c25a9936), [237](https://github.com/pookjw/NightPatch/commit/49d249516bd016dafd874ba33bf1d0b4eb598463))
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 239 (highlight changelog: Version [225](https://github.com/pookjw/NightPatch/commit/6a435a6f9c7553f00607fcb355b6ce022a148e92), [226](https://github.com/pookjw/NightPatch/commit/8ab2ec0f6cccdcaa0118005cb9621387f720fb5a), [232](https://github.com/pookjw/NightPatch/commit/b758e234f163f2a1d3be6c5906acc3d7c25a9936), [237](https://github.com/pookjw/NightPatch/commit/49d249516bd016dafd874ba33bf1d0b4eb598463))
 
 If you want to revert using backup, use `--revert`. Also using macOS combo Update is `--fix`.
 
