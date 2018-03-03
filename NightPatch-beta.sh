@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=243
+TOOL_VERSION=245
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -20,7 +20,7 @@ function showHelpMessage(){
 	echo "--do-not-patch		don't patch macOS"
 	echo "--skipCheckSystem	Skip checking system (macOS version, SIP)"
 	echo "--skipCheckHW		Skip checking hardware"
-	echo "--use-local-cache		use local cache"
+	echo "--use-local-cache	use local cache"
 }
 
 function setDefaultSettings(){

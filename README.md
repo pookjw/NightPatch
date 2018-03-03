@@ -40,9 +40,9 @@ Enter this command on Terminal **without $**.
 
 `$ cd /tmp; curl -s -o NightPatch.zip https://codeload.github.com/pookjw/NightPatch/zip/master; unzip -o -qq NightPatch.zip; cd NightPatch-master; chmod +x NightPatch.sh; sudo ./NightPatch-beta.sh`
 
-- [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 244
+- [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 246
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 243
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 245
 
 If you want to revert using backup, use `--revert`. Also using macOS combo Update is `--fix`.
 
