@@ -1,7 +1,7 @@
 #!/bin/sh
 # NightPatch
 
-TOOL_VERSION=245
+TOOL_VERSION=247
 TOOL_BUILD=beta
 CATALOG_URL="https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog.gz"
 
@@ -199,14 +199,18 @@ function revertSystem(){
 		else
 			echo "This backup is not for this macOS. Seems like you've updated your macOS."
 			echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
+			showLines "*"
 			showCommandGuide "--fix"
+			showLines "*"
 			quitTool 1
 		fi
 	else
 		echo "\033[1;31mERROR : No backup.\033[0m"
 		echo "If you want to download a original macOS system file from Apple, try this command \033[1;31mwithout $\033[0m. (takes a few minutes)"
 		echo
+		showLines "*"
 		showCommandGuide "--fix"
+		showLines "*"
 		quitTool 1
 	fi
 }
@@ -438,7 +442,9 @@ function checkHardware(){
 	fi
 	if [[ "${HW_ERROR}" == YES ]]; then
 		echo "\033[1;31mERROR : Your macOS already supports Night Shift by default.\033[0m (Detected hardware : ${MACHINE_MODEL}) If you want to ignore this warning, try this command \033[1;31mwithout $\033[0m."
+		showLines "*"
 		showCommandGuide "--skipCheckHW"
+		showLines "*"
 		quitTool 1
 	fi
 }
