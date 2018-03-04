@@ -42,7 +42,7 @@ Enter this command on Terminal **without $**.
 
 - [Stable](https://github.com/pookjw/NightPatch/blob/master/NightPatch.sh) : Version 246
 
-- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 245
+- [Beta](https://github.com/pookjw/NightPatch/blob/master/NightPatch-beta.sh) : Version 247 (changelog: [247](https://github.com/pookjw/NightPatch/commit/31e078eba8bd7bb437d7ef54c8e16c1b79631631))
 
 If you want to revert using backup, use `--revert`. Also using macOS combo Update is `--fix`.
 
