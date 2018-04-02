@@ -21,3 +21,5 @@
 - 10.13.3 (17D102)
 
 - 10.13.4 Developer beta 1 (17E139j)
+
+ - 10.13.4 (17E199) ([Issue](https://github.com/pookjw/NightPatch/issues/5))
