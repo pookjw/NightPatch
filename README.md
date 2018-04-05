@@ -1,4 +1,4 @@
-![Image](imgae.jpg)
+![Image](docs/imgae.jpg)
 
 # NightPatch
 
@@ -12,9 +12,9 @@ Not compatible with some third-party monitors.
 
 ## Supported macOS
 
-macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md))
+macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](docs/list.md))
 
-About 10.13.4 (17E199) and 10.13.5 (17F35e) - 10.13.4 (17E199) and 10.13.5 (17F35e) work well to me but [some people undergo unbootable issue](https://github.com/pookjw/NightPatch/issues/5).
+About 10.13.4 (17E199) and 10.13.5 (17F35e) - 10.13.4 (17E199) and 10.13.5 (17F35e) work well for me but [some people undergo unbootable issue](https://github.com/pookjw/NightPatch/issues/5).
 
 ## How to patch
 
