@@ -8,7 +8,7 @@ You have to disable SIP (System Integrity Protection) before applying. [How to d
 
 Backup your Mac before applying.
 
-Not compatible with some third-party monitors.
+Not compatible with some third-party monitors. This is a solution for unsupported Mac, not unsupported monitors!
 
 ## Supported macOS
 
