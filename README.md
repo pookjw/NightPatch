@@ -14,9 +14,7 @@ Not compatible with some third-party monitors.
 
 macOS 10.12.4 or later including High Sierra. ([List of tested macOS build](list.md))
 
-Also supports MacBook with macOS 10.13.2~10.13.3.
-
-About 10.13.4 (17E199) - ([Issue](https://github.com/pookjw/NightPatch/issues/5))
+About 10.13.4 (17E199) and 10.13.5 (17F35e) - 10.13.4 (17E199) and 10.13.5 (17F35e) work well to me but [some people undergo unbootable issue](https://github.com/pookjw/NightPatch/issues/5).
 
 ## How to patch
 
