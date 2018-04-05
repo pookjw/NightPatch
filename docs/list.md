@@ -24,4 +24,4 @@
 
  - 10.13.4 (17E199) ([Issue](https://github.com/pookjw/NightPatch/issues/5))
  
- - 10.13.5 (17F35e) Developer beta 1 ([Issue](https://github.com/pookjw/NightPatch/issues/5))
+ - 10.13.5 Developer beta 1 (17F35e) ([Issue](https://github.com/pookjw/NightPatch/issues/5))
